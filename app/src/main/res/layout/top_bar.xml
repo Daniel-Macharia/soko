@@ -2,18 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+
     >
 
     <ImageView
+        android:id="@+id/home_icon"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/menu_icon"
+        android:src="@drawable/home_icon"
 
         />
 
     <TextView
+        android:id="@+id/screenTitle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
@@ -24,10 +26,11 @@
         />
 
     <ImageView
+        android:id="@+id/logout_icon"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/profile"
+        android:src="@drawable/logout_icon"
 
         />
 

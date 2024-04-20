@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class );
                 startActivity(intent);
+
+                finishAffinity();
             }
         });
     }

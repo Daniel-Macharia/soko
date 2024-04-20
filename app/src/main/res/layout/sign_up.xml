@@ -39,6 +39,8 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:text="username"
+                android:gravity="end|center"
+                android:paddingEnd="4dp"
 
                 />
 
@@ -52,6 +54,7 @@
                 android:textColorHint="@color/grey"
                 android:textColor="@color/blue"
                 android:gravity="start|center"
+                android:paddingStart="4dp"
                 />
 
         </LinearLayout>
@@ -70,7 +73,8 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:text="email"
-
+                android:gravity="end|center"
+                android:paddingEnd="4dp"
                 />
 
             <EditText
@@ -83,6 +87,7 @@
                 android:textColorHint="@color/grey"
                 android:textColor="@color/blue"
                 android:gravity="start|center"
+                android:paddingStart="4dp"
                 />
 
         </LinearLayout>
@@ -101,7 +106,8 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:text="password"
-
+                android:gravity="end|center"
+                android:paddingEnd="4dp"
                 />
 
             <EditText
@@ -114,6 +120,7 @@
                 android:textColorHint="@color/grey"
                 android:textColor="@color/blue"
                 android:gravity="start|center"
+                android:paddingStart="4dp"
                 />
 
         </LinearLayout>
@@ -132,7 +139,8 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:text="confirm"
-
+                android:gravity="end|center"
+                android:paddingEnd="4dp"
                 />
 
             <EditText
@@ -145,6 +153,7 @@
                 android:textColorHint="@color/grey"
                 android:textColor="@color/blue"
                 android:gravity="start|center"
+                android:paddingStart="4dp"
                 />
 
         </LinearLayout>
