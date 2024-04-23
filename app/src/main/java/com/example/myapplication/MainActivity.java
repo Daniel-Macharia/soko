@@ -25,13 +25,8 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById( R.id.login );
         signUp = findViewById( R.id.signup );
 
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent( MainActivity.this, SignUp.class );
-                startActivity(intent);
-            }
-        });
+        setSignUpButton();
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,16 +36,55 @@ public class MainActivity extends AppCompatActivity {
                 user = username.getText().toString();
                 pass = password.getText().toString();
 
-                String message = "Username: " + user
-                        + "\nPassword: " + pass;
+                LocalDatabase db = new LocalDatabase( getApplicationContext() );
+                db.open();
+                if( db.userExists() )
+                {
+                    if( db.isLegitimateUser(user, pass) )
+                    {
+                        Intent intent = new Intent(MainActivity.this, HomeActivity.class );
+                        startActivity(intent);
 
-                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        finishAffinity();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "User does not exist\nPlease sign up", Toast.LENGTH_SHORT).show();
+                }
 
-                Intent intent = new Intent(MainActivity.this, HomeActivity.class );
-                startActivity(intent);
+                db.close();
 
-                finishAffinity();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        setSignUpButton();
+
+        super.onResume();
+    }
+
+    private void setSignUpButton()
+    {
+        LocalDatabase db = new LocalDatabase( getApplicationContext() );
+        db.open();
+        if( db.userExists() )
+        {
+            signUp.setVisibility( View.INVISIBLE );
+        }
+        else
+        {
+            signUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent( MainActivity.this, SignUp.class );
+                    startActivity(intent);
+                }
+            });
+        }
+
+        db.close();
     }
 }

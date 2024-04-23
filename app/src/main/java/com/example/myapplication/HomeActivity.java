@@ -86,6 +86,15 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "Clicked shopping cart", Toast.LENGTH_SHORT).show();
                     return true;
                 }
+                else
+                if( id == R.id.menu_item_help )
+                {
+                    Intent intent = new Intent( HomeActivity.this, HelpActivity.class );
+                    startActivity( intent );
+
+                    Toast.makeText(HomeActivity.this, "Clicked Help", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
 
                 return false;
             }

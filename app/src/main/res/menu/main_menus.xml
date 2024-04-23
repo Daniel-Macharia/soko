@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <item
         android:title="Notifications"
         android:id="@+id/menu_item_notification"
@@ -8,6 +9,11 @@
     <item
         android:title="Shopping Cart"
         android:id="@+id/menu_item_shopping_cart"
+        />
+
+    <item
+        android:title="Help"
+        android:id="@+id/menu_item_help"
         />
 
 </menu>

@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
-            android:textColor="@color/blue"
+            android:textColor="@color/dark_green"
             android:text="Create Account"
 
             />
@@ -158,6 +158,15 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/dark_green"
+            android:text="sign up as; "
+            android:layout_marginTop="8dp"
+            />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -170,17 +179,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="start|center"
-
+                android:paddingStart="4dp"
                 >
                 <Button
-                    android:id="@+id/signup_login"
+                    android:id="@+id/seller"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/blue"
                     android:gravity="center"
                     android:textSize="16sp"
-                    android:text="login"
-                    android:background="@drawable/rounded_rectangle"
+                    android:text="seller"
                     android:backgroundTint="@color/dark_green"
                     />
             </LinearLayout>
@@ -190,17 +198,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="end|center"
-
+                android:paddingEnd="4dp"
                 >
                 <Button
-                    android:id="@+id/signup_create"
+                    android:id="@+id/buyer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/blue"
                     android:gravity="center"
                     android:textSize="16sp"
-                    android:text="create"
-                    android:background="@drawable/rounded_rectangle"
+                    android:text="buyer"
                     android:backgroundTint="@color/dark_green"
                     />
             </LinearLayout>
