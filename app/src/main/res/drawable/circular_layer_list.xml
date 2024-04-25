@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/prof_pic"
+        android:drawable="@drawable/profile"/>
+
+    <item android:drawable="@drawable/profile_pic_back"/>
+
+</layer-list>

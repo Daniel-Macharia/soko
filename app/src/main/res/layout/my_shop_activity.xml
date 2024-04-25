@@ -2,7 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    tools:context=".MyShopActivity"
+
     >
 
     <include
@@ -65,8 +68,8 @@
                     android:gravity="start|center"
                     android:textSize="16sp"
                     android:textColor="@color/dark_green"
-                    android:paddingStart="8dp"
-                    android:layout_marginEnd="24dp"
+                    android:paddingStart="2dp"
+                    android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
 
                     />
@@ -75,11 +78,30 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/addProduct"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0"
-
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
             >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/add_item"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/blue"
+                android:text="Add Product"
+
+                />
 
         </LinearLayout>
 
@@ -95,7 +117,7 @@
         >
 
         <GridView
-            android:id="@+id/item_list"
+            android:id="@+id/my_shop_item_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:numColumns="2"

@@ -26,7 +26,20 @@ public class HelpActivity extends AppCompatActivity {
             @Override
             public void onClick( View view )
             {
-                Intent intent = new Intent( HelpActivity.this, HomeActivity.class );
+
+                Intent intent;
+
+                Intent i = getIntent();
+                String startedFromMyShop = i.getStringExtra("startedFromMyShop");
+                if( startedFromMyShop != null && startedFromMyShop.equals("shop") )
+                {
+                    intent = new Intent( HelpActivity.this, MyShopActivity.class );
+                }
+                else
+                {
+                    intent = new Intent( HelpActivity.this, HomeActivity.class );
+                }
+
                 startActivity(intent);
 
                 finishAffinity();
@@ -38,7 +51,7 @@ public class HelpActivity extends AppCompatActivity {
             @Override
             public void onClick( View view )
             {
-                Intent intent = new Intent( HelpActivity.this, MainActivity.class );
+                Intent intent = new Intent( HelpActivity.this, LoginActivity.class );
                 startActivity(intent);
 
                 finishAffinity();

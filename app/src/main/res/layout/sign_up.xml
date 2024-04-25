@@ -38,7 +38,7 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:text="username"
+                android:text="Username: "
                 android:gravity="end|center"
                 android:paddingEnd="4dp"
 
@@ -72,7 +72,41 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:text="email"
+                android:text="Phone: "
+                android:gravity="end|center"
+                android:paddingEnd="4dp"
+
+                />
+
+            <EditText
+                android:id="@+id/signup_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="phone"
+                android:hint="phone number"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/blue"
+                android:gravity="start|center"
+                android:paddingStart="4dp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="Email: "
                 android:gravity="end|center"
                 android:paddingEnd="4dp"
                 />
@@ -82,7 +116,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:inputType="text"
+                android:inputType="textEmailAddress"
                 android:hint="email address"
                 android:textColorHint="@color/grey"
                 android:textColor="@color/blue"
@@ -105,7 +139,7 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:text="password"
+                android:text="Password: "
                 android:gravity="end|center"
                 android:paddingEnd="4dp"
                 />
@@ -138,7 +172,7 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:text="confirm"
+                android:text="Confirm: "
                 android:gravity="end|center"
                 android:paddingEnd="4dp"
                 />

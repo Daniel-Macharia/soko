@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 
@@ -31,24 +34,56 @@ public class HomeActivity extends AppCompatActivity {
 
         listItems = findViewById( R.id.item_list );
 
+        requestPermissions();
         setGridItems();
 
         MyListAdapter adapter = new MyListAdapter(getApplicationContext(), items);
         listItems.setAdapter( adapter );
-        menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setMainMenu( HomeActivity.this, v);
-            }
-        });
 
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent( HomeActivity.this, ProfileActivity.class );
-                startActivity( intent );
-            }
-        });
+        Intent intent = getIntent();
+        String startedFromMyShop = intent.getStringExtra("startedFromMyShop");
+
+        if( startedFromMyShop != null && startedFromMyShop.equals("shop") )
+        {
+            menu.setImageDrawable( getDrawable(R.drawable.home_icon) );
+            profile.setImageDrawable( getDrawable( R.drawable.logout_icon));
+            menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomeActivity.this, MyShopActivity.class );
+                    startActivity( intent );
+
+                    finishAffinity();
+                }
+            });
+
+            profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent( HomeActivity.this, LoginActivity.class );
+                    startActivity( intent );
+
+                    finishAffinity();
+                }
+            });
+        }
+        else
+        {
+            menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setMainMenu( HomeActivity.this, v);
+                }
+            });
+
+            profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent( HomeActivity.this, ProfileActivity.class );
+                    startActivity( intent );
+                }
+            });
+        }
 
 
     }
@@ -103,6 +138,14 @@ public class HomeActivity extends AppCompatActivity {
         menu.inflate(R.menu.main_menus );
         menu.show();
 
+    }
+
+    private void requestPermissions()
+    {
+        if(ActivityCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED )
+        {
+            ActivityCompat.requestPermissions( HomeActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
     }
 
 }

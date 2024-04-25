@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SignUp extends AppCompatActivity {
 
     private Button seller, buyer;
-    private EditText username, email, password, confirmPassword;
+    private EditText username, email, password, confirmPassword, phone;
 
 
     @Override
@@ -25,6 +25,7 @@ public class SignUp extends AppCompatActivity {
         email = findViewById( R.id.signup_email );
         password = findViewById( R.id.signup_password );
         confirmPassword = findViewById( R.id.signup_confirm );
+        phone = findViewById( R.id.signup_phone );
 
         seller = findViewById( R.id.seller );
         buyer = findViewById( R.id.buyer );
@@ -32,41 +33,37 @@ public class SignUp extends AppCompatActivity {
         seller.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user, pass, confirm, mail;
+                String user, pass, confirm, mail, phoneNumber;
 
                 user = username.getText().toString();
                 pass = password.getText().toString();
                 confirm = confirmPassword.getText().toString();
                 mail = email.getText().toString();
+                phoneNumber = phone.getText().toString();
 
-                validateInput(user, pass, confirm, mail);
-
-                String message = "username: " + user
-                        + "\nEmail: " + mail
-                        + "\nPassword: " + pass
-                        + "\nConfirm: " + confirm;
-
-                Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
+                validateInput(user, phoneNumber, pass, confirm, mail, "seller");
+                launchLogin();
             }
         });
 
         buyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user, pass, confirm, mail;
+                String user, pass, confirm, mail, phoneNumber;
 
                 user = username.getText().toString();
                 pass = password.getText().toString();
                 confirm = confirmPassword.getText().toString();
                 mail = email.getText().toString();
+                phoneNumber = phone.getText().toString();
 
-                validateInput(user, pass, confirm, mail);
-
+                validateInput(user, phoneNumber, pass, confirm, mail, "buyer");
+                launchLogin();
             }
         });
     }
 
-    private void validateInput(String username, String password, String confirmPassword, String email)
+    private void validateInput(String username, String phoneNumber, String password, String confirmPassword, String email, String userType)
     {
         if( !UtilityClass.isNameValid( username ) )
         {
@@ -96,19 +93,37 @@ public class SignUp extends AppCompatActivity {
             return;
         }
 
-        createNewUserAccount( username, password, email);
+        createNewUserAccount( username, phoneNumber, password, email, userType);
     }
 
-    private void createNewUserAccount( String username, String password, String email)
+    private void createNewUserAccount( String username, String phoneNumber, String password, String email, String userType)
     {
         LocalDatabase db = new LocalDatabase( getApplicationContext() );
         db.open();
-        long id = db.addNewUser( username, password, email);
+        long id = db.addNewUser( username, phoneNumber, password, email, userType);
         db.close();
 
         if( id != -1 )
         {
             Toast.makeText(getApplicationContext(), "Account Created Successfully!", Toast.LENGTH_SHORT).show();
+            clearFields();
         }
+
+    }
+
+    private void clearFields()
+    {
+        username.setText("");
+        phone.setText("");
+        email.setText("");
+        password.setText("");
+        confirmPassword.setText("");
+    }
+
+    private void launchLogin()
+    {
+        Intent intent = new Intent( SignUp.this, LoginActivity.class );
+        startActivity( intent );
+        finish();
     }
 }

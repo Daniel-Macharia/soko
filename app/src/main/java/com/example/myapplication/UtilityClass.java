@@ -1,5 +1,10 @@
 package com.example.myapplication;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.ByteArrayOutputStream;
+
 public class UtilityClass {
 
     public static boolean isNameValid(String name)
@@ -30,5 +35,20 @@ public class UtilityClass {
         String emailRegex = "^[a-z0-9-]{1,100}@[a-z]{1,10}[.]{0,1}[a-z]{1,20}[.]{0,1}[a-z]{1,10}[.]{0,1}[a-z]{1,10}$";
 
         return (!email.equals("")) && email.matches( emailRegex );
+    }
+
+    public static byte[] convertBitmapToByteArray( Bitmap image )
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 0, stream);
+
+        return stream.toByteArray();
+    }
+
+    public static Bitmap convertByteArrayToBitmap( byte[] imageData )
+    {
+        Bitmap image = BitmapFactory.decodeByteArray( imageData, 0, imageData.length );
+
+        return image;
     }
 }

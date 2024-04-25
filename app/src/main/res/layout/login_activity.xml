@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-
+    tools:context=".LoginActivity"
     android:background="@drawable/bag1"
     android:gravity="center"
     >
@@ -103,7 +102,7 @@
             android:layout_margin="4dp"
             >
 
-            <LinearLayout
+            <!-- LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -119,7 +118,7 @@
                     android:backgroundTint="@color/dark_green"
                     android:gravity="center"
                     />
-            </LinearLayout>
+            </LinearLayout -->
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -147,6 +146,7 @@
             >
 
             <TextView
+                android:id="@+id/forgot_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/light_blue"

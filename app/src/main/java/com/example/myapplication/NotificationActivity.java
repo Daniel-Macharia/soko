@@ -42,7 +42,19 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onClick( View view )
             {
-                Intent intent = new Intent( NotificationActivity.this, HomeActivity.class );
+                Intent intent;
+
+                Intent i = getIntent();
+                String startedFromMyShop = i.getStringExtra("startedFromMyShop");
+                if( startedFromMyShop != null && startedFromMyShop.equals("shop") )
+                {
+                    intent = new Intent( NotificationActivity.this, MyShopActivity.class );
+                }
+                else
+                {
+                    intent = new Intent( NotificationActivity.this, HomeActivity.class );
+                }
+
                 startActivity(intent);
 
                 finishAffinity();
@@ -54,7 +66,7 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onClick( View view )
             {
-                Intent intent = new Intent( NotificationActivity.this, MainActivity.class );
+                Intent intent = new Intent( NotificationActivity.this, LoginActivity.class );
                 startActivity(intent);
 
                 finishAffinity();

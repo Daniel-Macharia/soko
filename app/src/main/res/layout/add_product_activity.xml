@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+
     >
 
     <include
@@ -17,7 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="9"
+        android:orientation="vertical"
         android:gravity="center"
+
         >
 
         <LinearLayout
@@ -32,10 +36,10 @@
             >
 
             <ImageView
-                android:id="@+id/profilePicture"
+                android:id="@+id/product_picture"
                 android:layout_width="160dp"
                 android:layout_height="160dp"
-                android:background="@drawable/circular_layer_list"
+                android:src="@drawable/add_picture"
                 />
 
             <LinearLayout
@@ -53,23 +57,24 @@
                     android:layout_weight="1"
                     android:gravity="end|center"
                     android:paddingEnd="4dp"
-                    android:textColor="@color/grey"
-                    android:textSize="20sp"
-                    android:text="Username: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="Product Name"
 
                     />
 
-                <TextView
-                    android:id="@+id/user_name"
+                <EditText
+                    android:id="@+id/product_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="start|center"
                     android:paddingStart="4dp"
                     android:textColor="@color/blue"
-                    android:textSize="20sp"
-                    android:text="user's name "
-                    android:inputType="textMultiLine"
+                    android:textSize="18sp"
+                    android:hint="product's name "
+                    android:inputType="text"
+                    android:textColorHint="@color/grey"
                     />
 
             </LinearLayout>
@@ -88,65 +93,29 @@
                     android:layout_weight="1"
                     android:gravity="end|center"
                     android:paddingEnd="4dp"
-                    android:textColor="@color/grey"
-                    android:textSize="20sp"
-                    android:text="Phone: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="Description: "
 
                     />
 
-                <TextView
-                    android:id="@+id/user_phone"
+                <EditText
+                    android:id="@+id/product_description"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="start|center"
                     android:paddingStart="4dp"
                     android:textColor="@color/blue"
-                    android:textSize="20sp"
-                    android:text="user's phone number "
+                    android:textSize="18sp"
+                    android:hint="short description of product"
                     android:inputType="textMultiLine"
-
+                    android:textColorHint="@color/grey"
                     />
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="2dp"
-                android:layout_margin="2dp"
-                >
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="end|center"
-                    android:paddingEnd="4dp"
-                    android:textColor="@color/grey"
-                    android:textSize="20sp"
-                    android:text="Email: "
-
-                    />
-
-                <TextView
-                    android:id="@+id/user_email"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="start|center"
-                    android:paddingStart="4dp"
-                    android:textColor="@color/blue"
-                    android:textSize="20sp"
-                    android:text="user's email address "
-                    android:inputType="textMultiLine"
-
-                    />
-
-            </LinearLayout>
-
-            <!--LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:orientation="horizontal"
@@ -158,31 +127,118 @@
                     android:layout_weight="1"
                     android:gravity="end|center"
                     android:paddingEnd="4dp"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp"
-                    android:text="Location: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="Category "
 
                     />
 
+
+                <Spinner
+                    android:id="@+id/product_cart"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:layout_margin="4dp"
+                    android:gravity="start|center"
+                    android:popupBackground="@color/cream"
+                    android:popupTheme="@color/blue"
+                    android:paddingStart="4dp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp"
+                android:layout_margin="2dp"
+                >
+
                 <TextView
-                    android:id="@+id/user_location"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="end|center"
+                    android:paddingEnd="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="Items in store"
+
+                    />
+
+                <EditText
+                    android:id="@+id/product_number"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="start|center"
                     android:paddingStart="4dp"
                     android:textColor="@color/blue"
-                    android:textSize="16sp"
-                    android:text="user's location "
+                    android:textSize="18sp"
+                    android:hint="product pieces available"
+                    android:inputType="number"
+                    android:textColorHint="@color/grey"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="end|center"
+                    android:paddingEnd="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:text="Price(Ksh) "
 
                     />
 
-            </LinearLayout -->
+                <EditText
+                    android:id="@+id/product_price"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="start|center"
+                    android:paddingStart="4dp"
+                    android:textColor="@color/blue"
+                    android:textSize="18sp"
+                    android:hint="product price(ksh)"
+                    android:inputType="number"
+                    android:textColorHint="@color/grey"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center|end"
+                android:paddingEnd="4dp"
+                >
+
+                <Button
+                    android:id="@+id/add_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/blue"
+                    android:backgroundTint="@color/dark_green"
+                    android:textSize="16sp"
+                    android:text="Add Product"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 </LinearLayout>
