@@ -41,8 +41,10 @@ public class SignUp extends AppCompatActivity {
                 mail = email.getText().toString();
                 phoneNumber = phone.getText().toString();
 
-                validateInput(user, phoneNumber, pass, confirm, mail, "seller");
-                launchLogin();
+                if(validateInput(user, phoneNumber, pass, confirm, mail, "seller"))
+                {
+                    launchLogin();
+                }
             }
         });
 
@@ -57,25 +59,27 @@ public class SignUp extends AppCompatActivity {
                 mail = email.getText().toString();
                 phoneNumber = phone.getText().toString();
 
-                validateInput(user, phoneNumber, pass, confirm, mail, "buyer");
-                launchLogin();
+                if(validateInput(user, phoneNumber, pass, confirm, mail, "buyer"))
+                {
+                    launchLogin();
+                }
             }
         });
     }
 
-    private void validateInput(String username, String phoneNumber, String password, String confirmPassword, String email, String userType)
+    private boolean validateInput(String username, String phoneNumber, String password, String confirmPassword, String email, String userType)
     {
         if( !UtilityClass.isNameValid( username ) )
         {
             Toast.makeText(getApplicationContext(), "Username cannot be blank\n" +
                     "It may only contain characters and digits", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         if( !UtilityClass.isEmailValid( email ) )
         {
             Toast.makeText(getApplicationContext(), "Please enter a valid email!", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         if( password.equals( confirmPassword ) )
@@ -85,15 +89,17 @@ public class SignUp extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Password is too weak!" +
                         "\n It should contain both upper and lower case letters " +
                         "\nand at least one special character", Toast.LENGTH_SHORT).show();
+                return false;
             }
         }
         else
         {
             Toast.makeText(getApplicationContext(), "Password and the confirm password do not match!", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
 
         createNewUserAccount( username, phoneNumber, password, email, userType);
+        return true;
     }
 
     private void createNewUserAccount( String username, String phoneNumber, String password, String email, String userType)

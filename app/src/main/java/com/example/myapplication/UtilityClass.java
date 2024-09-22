@@ -21,8 +21,9 @@ public class UtilityClass {
         String integerRegex = "^[\\w\\W]{0,60}[0-9]{1,20}[\\w\\W]{0,60}$";
         String specialCharIndex = "^[\\w\\W]{0,60}[`~!@#$%^&*()]{1,20}[\\w\\W]{0,60}$";
 
-        if( (!password.equals("")) && (password.length() >= 8) && password.matches(lowerAlphaRegex)
-                && password.matches(upperAlphaRegex) && password.matches(integerRegex) && password.matches(specialCharIndex) )
+        if( (!password.equals("")) && (password.length() >= 8)
+                && password.matches(lowerAlphaRegex) && password.matches(upperAlphaRegex)
+                && password.matches(integerRegex) && password.matches(specialCharIndex) )
         {
             return true;
         }
