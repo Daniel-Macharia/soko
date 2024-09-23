@@ -1,7 +1,12 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Handler;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
@@ -51,5 +56,31 @@ public class UtilityClass {
         Bitmap image = BitmapFactory.decodeByteArray( imageData, 0, imageData.length );
 
         return image;
+    }
+
+    public static boolean isConnectedToInternet(Context context, Handler handler)
+    {
+        boolean isConnected = true;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService( Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo info = cm.getActiveNetworkInfo();
+
+            if(!( info != null && info.isAvailable() ))
+            {
+                isConnected = false;
+            }
+
+        }catch(Exception e)
+        {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Error: " + e, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        return isConnected;
     }
 }

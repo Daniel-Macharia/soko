@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,6 +20,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -140,19 +145,34 @@ public class AddProductActivity extends AppCompatActivity {
                     return;
                 }
 
-                LocalDatabase db = new LocalDatabase(getApplicationContext());
-                db.open();
-                db.addProduct(productPictureUri, name, desc, cart, Integer.parseInt(num), Integer.parseInt(price));
-                db.close();
+                if( UtilityClass.isConnectedToInternet( getApplicationContext(), new Handler( Looper.getMainLooper() ) ))
+                {
+                    int numInStock = Integer.parseInt(num);
+                    int productPrice = Integer.parseInt(price);
+                    //add product to local db
+                    LocalDatabase db = new LocalDatabase(getApplicationContext());
+                    db.open();
+                    db.addProduct(productPictureUri, name, desc, cart, numInStock, productPrice);
+                    db.close();
 
-                MyShopActivity.adapter.addRefreshList( new ProductModel(productPictureUri,
-                        name,
-                        desc,
-                        cart,
-                        Integer.parseInt(num),
-                        Integer.parseInt(price)));
+                    //add product to cloud storage
+                    addProductToSoko(productPictureUri, name, desc, cart, numInStock, productPrice);
 
-                clearInputFields();
+                    //update the grid view in the main screen
+                    MyShopActivity.adapter.addRefreshList( new ProductModel(productPictureUri,
+                            name,
+                            desc,
+                            cart,
+                            numInStock,
+                            productPrice));
+
+                    clearInputFields();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Not connected to the internet!" +
+                            "\nPlease check your connection and try again.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -184,5 +204,53 @@ public class AddProductActivity extends AppCompatActivity {
 
         for( String cat : list )
             categoryList.add( "" + cat );
+    }
+
+    public void addProductToSoko(String productImageUri
+            , String productName, String productDescription
+            , String productCartegory, int quantity, int price)
+    {
+        Product product = new Product(productImageUri, productName
+                , productDescription, productCartegory, quantity, price);
+        Toast.makeText(getApplicationContext(), "Created product. Now adding to firebase...", Toast.LENGTH_SHORT).show();
+       /* new Thread(new Runnable() {
+            @Override
+            public void run() {*/
+                try{
+                    Toast.makeText(getApplicationContext(), "Creating database instance", Toast.LENGTH_SHORT).show();
+                    FirebaseDatabase db = FirebaseDatabase.getInstance();
+
+                    Toast.makeText(getApplicationContext(), "Getting database reference", Toast.LENGTH_SHORT).show();
+                    DatabaseReference ref = db.getReference();
+
+                    Toast.makeText(getApplicationContext(), "Adding product", Toast.LENGTH_SHORT).show();
+                    ref.child("product").push().setValue(product);
+                }catch( Exception e )
+                {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText( getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            /*}
+        });*/
+    }
+
+    class Product{
+        public String productImageUri, productName, productDescription, productCartegory;
+        public int productQuantity, productPrice;
+        public Product( String productImageUri, String productName
+                , String productDescription, String productCartegory
+                , int quantity, int price)
+        {
+            this.productImageUri = new String(productImageUri);
+            this.productName = new String(productName);
+            this.productDescription = new String(productDescription);
+            this.productCartegory = new String(productCartegory);
+            this.productQuantity = quantity;
+            this.productPrice = price;
+        }
     }
 }
