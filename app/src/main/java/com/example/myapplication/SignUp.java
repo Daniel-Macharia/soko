@@ -87,7 +87,7 @@ public class SignUp extends AppCompatActivity {
     {
         User user = new User(userName, userPhone, userMail, userLocation, userIsSeller);
 
-        if( UtilityClass.isNetworkConnectionAvailable( getApplicationContext(), new Handler(Looper.getMainLooper()) ))
+        if( UtilityClass.isNetworkConnectionAvailable(  getApplicationContext(), new Handler(Looper.getMainLooper()) ))
         {
             FirebaseDatabase db = FirebaseDatabase.getInstance();
             DatabaseReference ref = db.getReference("user");
