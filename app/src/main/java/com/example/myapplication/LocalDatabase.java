@@ -130,7 +130,7 @@ public class LocalDatabase {
         helper.close();
     }
 
-    public long addNewUser( String name, String phoneNumber, String pass, String email, String user_type)
+    public long addNewUser( String name, String phoneNumber, String pass, String email, boolean user_type)
     {
         ContentValues cv = new ContentValues();
         cv.put(username, name);

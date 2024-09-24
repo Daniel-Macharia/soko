@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.widget.Toast;
@@ -82,5 +84,34 @@ public class UtilityClass {
         }
 
         return isConnected;
+    }
+
+    public static boolean isNetworkConnectionAvailable( Context context, Handler handler )
+    {
+        boolean isAvailable = false;
+
+        try
+        {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            Network network = cm.getActiveNetwork();
+
+            NetworkCapabilities netCaps = cm.getNetworkCapabilities( network );
+
+            if( netCaps.hasCapability( NetworkCapabilities.NET_CAPABILITY_VALIDATED) )
+            {
+                isAvailable = true;
+            }
+        }catch(Exception e)
+        {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Error: " + e, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        return isAvailable;
     }
 }

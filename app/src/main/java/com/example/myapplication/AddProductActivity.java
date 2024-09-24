@@ -145,7 +145,7 @@ public class AddProductActivity extends AppCompatActivity {
                     return;
                 }
 
-                if( UtilityClass.isConnectedToInternet( getApplicationContext(), new Handler( Looper.getMainLooper() ) ))
+                if( UtilityClass.isNetworkConnectionAvailable( getApplicationContext(), new Handler( Looper.getMainLooper() ) ))
                 {
                     int numInStock = Integer.parseInt(num);
                     int productPrice = Integer.parseInt(price);
