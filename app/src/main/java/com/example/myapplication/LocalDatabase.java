@@ -66,7 +66,7 @@ public class LocalDatabase {
                                 + userEmail + " TEXT NOT NULL, "
                                 + userPhone + " TEXT NOT NULL, "
                                 + userProfilePic + " TEXT, "
-                                + userType + " TEXT NOT NULL"
+                                + userType + " BOOLEAN NOT NULL"
                                 + " )"
                 );
                 db.execSQL(

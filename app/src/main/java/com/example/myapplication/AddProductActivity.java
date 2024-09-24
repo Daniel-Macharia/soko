@@ -213,9 +213,9 @@ public class AddProductActivity extends AppCompatActivity {
         Product product = new Product(productImageUri, productName
                 , productDescription, productCartegory, quantity, price);
         Toast.makeText(getApplicationContext(), "Created product. Now adding to firebase...", Toast.LENGTH_SHORT).show();
-       /* new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
-            public void run() {*/
+            public void run() {
                 try{
                     Toast.makeText(getApplicationContext(), "Creating database instance", Toast.LENGTH_SHORT).show();
                     FirebaseDatabase db = FirebaseDatabase.getInstance();
@@ -234,23 +234,24 @@ public class AddProductActivity extends AppCompatActivity {
                         }
                     });
                 }
-            /*}
-        });*/
+            }
+        }).start();
     }
 
-    class Product{
-        public String productImageUri, productName, productDescription, productCartegory;
-        public int productQuantity, productPrice;
-        public Product( String productImageUri, String productName
-                , String productDescription, String productCartegory
-                , int quantity, int price)
-        {
-            this.productImageUri = new String(productImageUri);
-            this.productName = new String(productName);
-            this.productDescription = new String(productDescription);
-            this.productCartegory = new String(productCartegory);
-            this.productQuantity = quantity;
-            this.productPrice = price;
-        }
+}
+
+class Product{
+    public String productImageUri, productName, productDescription, productCartegory;
+    public int productQuantity, productPrice;
+    public Product( String productImageUri, String productName
+            , String productDescription, String productCartegory
+            , int quantity, int price)
+    {
+        this.productImageUri = new String(productImageUri);
+        this.productName = new String(productName);
+        this.productDescription = new String(productDescription);
+        this.productCartegory = new String(productCartegory);
+        this.productQuantity = quantity;
+        this.productPrice = price;
     }
 }

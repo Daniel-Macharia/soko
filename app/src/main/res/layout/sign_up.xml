@@ -72,6 +72,40 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@color/black"
+                android:text="Location: "
+                android:gravity="end|center"
+                android:paddingEnd="4dp"
+
+                />
+
+            <EditText
+                android:id="@+id/signup_user_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="textPersonName"
+                android:hint="enter location"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/blue"
+                android:gravity="start|center"
+                android:paddingStart="4dp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@color/black"
                 android:text="Phone: "
                 android:gravity="end|center"
                 android:paddingEnd="4dp"
