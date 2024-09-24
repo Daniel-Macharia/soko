@@ -54,7 +54,7 @@ public class SignUp extends AppCompatActivity {
 
                 if(validateInput(user, phoneNumber, pass, confirm, mail, "seller"))
                 {
-                    addUser( user, phoneNumber, pass, loc, true);
+                    addUser( user, phoneNumber, mail, loc, true);
                     //createNewUserAccount( user, phoneNumber, pass, mail, "seller");
                     launchLogin();
                 }
@@ -75,7 +75,7 @@ public class SignUp extends AppCompatActivity {
 
                 if(validateInput(user, phoneNumber, pass, confirm, mail, "buyer"))
                 {
-                    addUser( user, phoneNumber, pass, loc, false);
+                    addUser( user, phoneNumber, mail, loc, false);
                     //createNewUserAccount( user, phoneNumber, pass, mail, "buyer");
                     launchLogin();
                 }
