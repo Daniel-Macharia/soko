@@ -40,18 +40,18 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:text="Username: "
+                android:text="Email: "
                 android:gravity="end|center"
                 android:paddingEnd="4dp"
                 />
 
             <EditText
-                android:id="@+id/login_username"
+                android:id="@+id/login_userEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:hint="enter username or email"
-                android:inputType="text"
+                android:hint="enter email"
+                android:inputType="textEmailAddress"
                 android:textColor="@color/blue"
                 android:textColorHint="@color/grey"
                 android:textSize="16sp"
