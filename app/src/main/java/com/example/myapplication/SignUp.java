@@ -56,7 +56,7 @@ public class SignUp extends AppCompatActivity {
                 {
                     addUser( user, phoneNumber, mail, loc, true);
                     //createNewUserAccount( user, phoneNumber, pass, mail, "seller");
-                    launchLogin();
+                    //launchLogin();
                 }
             }
         });
@@ -77,7 +77,7 @@ public class SignUp extends AppCompatActivity {
                 {
                     addUser( user, phoneNumber, mail, loc, false);
                     //createNewUserAccount( user, phoneNumber, pass, mail, "buyer");
-                    launchLogin();
+                    //launchLogin();
                 }
             }
         });
@@ -114,13 +114,15 @@ public class SignUp extends AppCompatActivity {
                         ref.push().setValue(user);
                         //add user to local database
                         createNewUserAccount(user);
+                        Toast.makeText(getApplicationContext(), "Account created successfully!", Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
                         //perform user account recovery
-                        Toast.makeText(getApplicationContext(), "A user with this phone exists!", Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getApplicationContext(), "A user with this phone exists!\nEnter details to login.", Toast.LENGTH_SHORT).show();
                     }
+
+                    launchLogin();
                 }
             });
         }
