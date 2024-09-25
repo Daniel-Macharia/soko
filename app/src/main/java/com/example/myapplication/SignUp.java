@@ -54,7 +54,7 @@ public class SignUp extends AppCompatActivity {
 
                 if(validateInput(user, phoneNumber, pass, confirm, mail, "seller"))
                 {
-                    addUser( user, phoneNumber, mail, loc, true);
+                    addUser( user, pass, phoneNumber, mail, loc, true);
                     //createNewUserAccount( user, phoneNumber, pass, mail, "seller");
                     //launchLogin();
                 }
@@ -75,7 +75,7 @@ public class SignUp extends AppCompatActivity {
 
                 if(validateInput(user, phoneNumber, pass, confirm, mail, "buyer"))
                 {
-                    addUser( user, phoneNumber, mail, loc, false);
+                    addUser( user, pass, phoneNumber, mail, loc, false);
                     //createNewUserAccount( user, phoneNumber, pass, mail, "buyer");
                     //launchLogin();
                 }
@@ -83,9 +83,9 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
-    private void addUser( String userName, String userPhone, String userMail, String userLocation, boolean userIsSeller)
+    private void addUser( String userName, String userPassword, String userPhone, String userMail, String userLocation, boolean userIsSeller)
     {
-        User user = new User(userName, userPhone, userMail, userLocation, userIsSeller);
+        User user = new User(userName, userPassword, userPhone, userMail, userLocation, userIsSeller);
 
         if( UtilityClass.isNetworkConnectionAvailable(  getApplicationContext(), new Handler(Looper.getMainLooper()) ))
         {
@@ -201,16 +201,17 @@ public class SignUp extends AppCompatActivity {
 
 class User
 {
-    public String userName, userPhone, userEmail, userLocation;
+    public String userName, userPhone, userEmail, userLocation, userPassword;
     public boolean userIsSeller;
-    public User( String userName, String userPhone
-            , String userEmail, String userLocation
-            , boolean userIsSeller)
+    public User( String userName, String userPassword
+            , String userPhone, String userEmail
+            , String userLocation, boolean userIsSeller)
     {
         this.userName = new String(userName);
         this.userPhone = new String(userPhone);
         this.userEmail = new String(userEmail);
         this.userLocation = new String(userLocation);
+        this.userPassword = new String(userPassword);
         this.userIsSeller = userIsSeller;
     }
 }
