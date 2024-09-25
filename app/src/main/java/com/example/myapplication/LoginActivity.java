@@ -93,11 +93,19 @@ public class LoginActivity extends AppCompatActivity {
                         userIsSeller = (boolean) child.child("userIsSeller").getValue();
                     }
 
-                    if( userEmail.equals( email ) && userPass.equals( pass ) )
+                    if( userEmail.equals( email ) )
                     {
-                        //valid user credentials. allow login
-                        isValid = true;
-                        break;
+                        if(userPass.equals( pass ))
+                        {
+                            //valid user credentials. allow login
+                            isValid = true;
+                            break;
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "Invalid password!" +
+                                    "\nPlease confirm and try again", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
 
@@ -118,8 +126,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     //invalid credentials. Alert user
-                    Toast.makeText(getApplicationContext(), "Invalid email or password!" +
-                            "\nPlease confirm and try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "No user with the entered email exists!" +
+                            "\nPlease sign up.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent( LoginActivity.this, SignUp.class);
+                    startActivity(intent);
+                    finishAffinity();
                 }
             }
         });

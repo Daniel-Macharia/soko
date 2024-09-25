@@ -98,10 +98,10 @@ public class SignUp extends AppCompatActivity {
                     boolean userAvailable = false;
                     for( DataSnapshot child : task.getResult().getChildren() )
                     {
-                        if( child.hasChild("userPhone") )
+                        if( child.hasChild("userEmail") )
                         {
-                            String phone = child.child("userPhone").getValue().toString();
-                            if( user.userPhone.equals(phone) )
+                            String email = child.child("userEmail").getValue().toString();
+                            if( user.userEmail.equals(email) )
                             {
                                 userAvailable = true;
                                 break;
@@ -119,7 +119,7 @@ public class SignUp extends AppCompatActivity {
                     else
                     {
                         //perform user account recovery
-                        Toast.makeText(getApplicationContext(), "A user with this phone exists!\nEnter details to login.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "A user with this email exists!\nEnter details to login.", Toast.LENGTH_SHORT).show();
                     }
 
                     launchLogin();
