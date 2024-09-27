@@ -40,15 +40,24 @@ public class ResetPassword extends AppCompatActivity {
                 String pass = password.getText().toString();
                 String conf = confirm.getText().toString();
 
-                if(pass.equals(conf))
+                if( validPassword(pass) )
                 {
-                    setUserPassword( userEmail, pass);
+                    if(pass.equals(conf))
+                    {
+                        setUserPassword( userEmail, pass);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "The password and the confirm password do not match!", Toast.LENGTH_SHORT).show();
+                        //password.setText("");
+                        //confirm.setText("");
+                    }
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), "The password and the confirm password do not match!", Toast.LENGTH_SHORT).show();
-                    //password.setText("");
-                    //confirm.setText("");
+                    Toast.makeText(getApplicationContext(), "Password too weak!" +
+                            "\nIt should be at least 8 characters long and contain both upper and lowercase letters," +
+                            "\n numbers, and a special character.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -93,5 +102,15 @@ public class ResetPassword extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean validPassword(String password)
+    {
+        if( UtilityClass.isPasswordStrong(password) )
+        {
+            return true;
+        }
+
+        return false;
     }
 }
