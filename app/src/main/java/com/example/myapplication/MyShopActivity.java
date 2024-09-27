@@ -65,6 +65,14 @@ public class MyShopActivity extends AppCompatActivity {
                 String isFromShop = "shop";
                 Intent intent = new Intent( MyShopActivity.this, ProfileActivity.class );
                 intent.putExtra("isFromShop", isFromShop);
+
+                Intent myShopIntent = getIntent();
+                intent.putExtra("userName", myShopIntent.getStringExtra("userName"));
+                intent.putExtra("userEmail", myShopIntent.getStringExtra("userEmail"));
+                intent.putExtra("userPhone", myShopIntent.getStringExtra("userPhone"));
+                intent.putExtra("userLocation", myShopIntent.getStringExtra("userLocation"));
+                intent.putExtra("userIsSeller", myShopIntent.getBooleanExtra("userIsSeller", false));
+
                 startActivity( intent );
             }
         });

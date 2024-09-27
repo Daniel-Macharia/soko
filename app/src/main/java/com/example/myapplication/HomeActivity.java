@@ -61,6 +61,14 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent( HomeActivity.this, LoginActivity.class );
+
+                    Intent homeIntent = getIntent();
+                    intent.putExtra("userName", homeIntent.getStringExtra("userName"));
+                    intent.putExtra("userEmail", homeIntent.getStringExtra("userEmail"));
+                    intent.putExtra("userPhone", homeIntent.getStringExtra("userPhone"));
+                    intent.putExtra("userLocation", homeIntent.getStringExtra("userLocation"));
+                    intent.putExtra("userIsSeller", homeIntent.getBooleanExtra("userIsSeller", true));
+
                     startActivity( intent );
 
                     finishAffinity();

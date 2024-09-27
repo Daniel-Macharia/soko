@@ -23,7 +23,9 @@
         <activity android:name=".HelpActivity"></activity>
         <activity android:name=".MyShopActivity"></activity>
         <activity android:name=".AddProductActivity"></activity>
-        <activity android:name=".LoginActivity"></activity>
+        <!-- activity android:name=".LoginActivity"></activity -->
+        <activity android:name=".SendOTP" ></activity>
+        <activity android:name=".ResetPassword" ></activity>
 
         <activity
             android:name=".LoginActivity"

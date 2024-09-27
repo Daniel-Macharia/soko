@@ -2,7 +2,9 @@ package com.example.myapplication;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -136,16 +138,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setProfile()
     {
-        LocalDatabase db = new LocalDatabase(getApplicationContext());
-        db.open();
-        Bitmap pic = db.getProfilePicture();
-        String []details = db.getUserDetails();
-        db.close();
-
-        profilePicture.setImageBitmap(pic);
-        userName.setText(details[0]);
-        userPhone.setText(details[1]);
-        userEmail.setText(details[2]);
+        Intent intent = getIntent();
+        //profilePicture.setImageBitmap(pic);
+        userName.setText(intent.getStringExtra("userName"));//details[0]);
+        userPhone.setText(intent.getStringExtra("userPhone"));//details[1]);
+        userEmail.setText(intent.getStringExtra("userEmail"));//details[2]);
     }
 
     private void selectImage()

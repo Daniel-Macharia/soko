@@ -119,10 +119,12 @@ public class SignUp extends AppCompatActivity {
                     else
                     {
                         //perform user account recovery
-                        Toast.makeText(getApplicationContext(), "A user with this email exists!\nEnter details to login.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "A user with this email exists!" +
+                                "\nEnter details to login.", Toast.LENGTH_SHORT).show();
+
                     }
 
-                    launchLogin();
+                    launchLogin(userMail);
                 }
             });
         }
@@ -190,9 +192,10 @@ public class SignUp extends AppCompatActivity {
         confirmPassword.setText("");
     }
 
-    private void launchLogin()
+    private void launchLogin(String userMail)
     {
         Intent intent = new Intent( SignUp.this, LoginActivity.class );
+        intent.putExtra("userMail", userMail);
         startActivity( intent );
         finish();
     }
