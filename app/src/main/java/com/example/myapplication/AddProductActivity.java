@@ -155,8 +155,9 @@ public class AddProductActivity extends AppCompatActivity {
                     db.addProduct(productPictureUri, name, desc, cart, numInStock, productPrice);
                     db.close();
 
+                    String productSellerEmail = getIntent().getStringExtra("userEmail");
                     //add product to cloud storage
-                    addProductToSoko(productPictureUri, name, desc, cart, numInStock, productPrice);
+                    addProductToSoko( productSellerEmail, productPictureUri, name, desc, cart, numInStock, productPrice);
 
                     //update the grid view in the main screen
                     MyShopActivity.adapter.addRefreshList( new ProductModel(productPictureUri,
@@ -206,11 +207,11 @@ public class AddProductActivity extends AppCompatActivity {
             categoryList.add( "" + cat );
     }
 
-    public void addProductToSoko(String productImageUri
+    public void addProductToSoko(String productSellerEmail, String productImageUri
             , String productName, String productDescription
             , String productCartegory, int quantity, int price)
     {
-        Product product = new Product(productImageUri, productName
+        Product product = new Product( productSellerEmail, productImageUri, productName
                 , productDescription, productCartegory, quantity, price);
         Toast.makeText(getApplicationContext(), "Created product. Now adding to firebase...", Toast.LENGTH_SHORT).show();
         new Thread(new Runnable() {
@@ -242,11 +243,13 @@ public class AddProductActivity extends AppCompatActivity {
 
 class Product{
     public String productImageUri, productName, productDescription, productCartegory;
+    public String productSellerEmail;
     public int productQuantity, productPrice;
-    public Product( String productImageUri, String productName
+    public Product( String productSellerEmail, String productImageUri, String productName
             , String productDescription, String productCartegory
             , int quantity, int price)
     {
+        this.productSellerEmail = new String(productSellerEmail);
         this.productImageUri = new String(productImageUri);
         this.productName = new String(productName);
         this.productDescription = new String(productDescription);
