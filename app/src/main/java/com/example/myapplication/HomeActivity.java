@@ -12,8 +12,15 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -22,6 +29,8 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView menu, profile;
     private GridView listItems;
     private ArrayList<ListItem> items = new ArrayList<>();
+
+    private MyListAdapter adapter;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -37,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
         requestPermissions();
         setGridItems();
 
-        MyListAdapter adapter = new MyListAdapter(getApplicationContext(), items);
+        adapter = new MyListAdapter(getApplicationContext(), items);
         listItems.setAdapter( adapter );
 
         Intent intent = getIntent();
@@ -98,10 +107,63 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setGridItems()
     {
-        for( int i = 0; i <= 20; i++)
+        /*for( int i = 0; i <= 20; i++)
         {
-            items.add( new ListItem( 0, "Item Name", "Item " + i, 0) );
-        }
+            items.add( new ListItem( 0, "Item Name", "Item " + i, 0, 0.0, 0) );
+        }*/
+
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference ref = db.getReference("product");
+
+        ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                try {
+                    for( DataSnapshot product : task.getResult().getChildren() )
+                    {
+                        String sellerEmail = "";
+
+                        if( product.hasChild("productSellerEmail") )
+                        {
+                            sellerEmail = product.child("productSellerEmail").getValue().toString();
+                        }
+
+                        //add only products sold by other people
+                        if( !getIntent().getStringExtra("userEmail").equals(sellerEmail) )
+                        {
+                            String itemName = "", itemDescription = "";
+                            long itemPrice = 0;
+                            long itemQuantityInStock = 0;
+
+                            if( product.hasChild("productName") )
+                            {
+                                itemName = product.child("productName").getValue().toString();
+                            }
+                            if( product.hasChild("productDescription") )
+                            {
+                                itemDescription = product.child("productDescription").getValue().toString();
+                            }
+                            if( product.hasChild("productPrice") )
+                            {
+                                itemPrice = (long) product.child("productPrice").getValue();
+                            }
+                            if( product.hasChild("productQuantity") )
+                            {
+                                itemQuantityInStock = (long) product.child("productQuantity").getValue();
+                            }
+
+                            items.add( new ListItem(0, itemName, itemDescription, 0, itemPrice, itemQuantityInStock) );
+                        }
+
+                    }
+
+                    adapter.notifyDataSetChanged();
+                }catch(Exception e)
+                {
+                    Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void setMainMenu(Context context, View view)

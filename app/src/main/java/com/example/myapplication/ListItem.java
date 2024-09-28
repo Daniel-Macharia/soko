@@ -5,14 +5,18 @@ public class ListItem {
     private int itemImageID;
     private String itemName;
     private String itemDesc;
+    private double itemPrice;
+    private long itemQuantityInStock;
     private int addToCartIconID;
 
-    public ListItem( int itemImageID, String itemName, String itemDesc, int addToCartIconID)
+    public ListItem( int itemImageID, String itemName, String itemDesc, int addToCartIconID, double itemPrice, long itemQuantityInStock)
     {
         this.itemImageID = itemImageID;
         this.itemName = itemName;
         this.itemDesc = itemDesc;
         this.addToCartIconID = addToCartIconID;
+        this.itemPrice = itemPrice;
+        this.itemQuantityInStock = itemQuantityInStock;
     }
 
     public void setItemImageID( int itemImageID )
@@ -39,4 +43,10 @@ public class ListItem {
     public String getDesc(){ return this.itemDesc;}
 
     public int getAddToCartIconID(){return this.addToCartIconID;}
+
+    public void setItemPrice(double itemPrice){this.itemPrice = itemPrice;}
+    public double getItemPrice(){return this.itemPrice;}
+
+    public void setItemQuantityInStock(int itemQuantityInStock){this.itemQuantityInStock = itemQuantityInStock;}
+    public long getItemQuantityInStock(){return this.itemQuantityInStock;}
 }

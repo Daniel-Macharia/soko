@@ -14,8 +14,15 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -92,7 +99,7 @@ public class MyShopActivity extends AppCompatActivity {
 
     private void setGridItems()
     {
-        LocalDatabase db = new LocalDatabase(getApplicationContext());
+        /*LocalDatabase db = new LocalDatabase(getApplicationContext());
         db.open();
         ArrayList<String[]> products = db.getAvailableProducts();
         db.close();
@@ -107,7 +114,67 @@ public class MyShopActivity extends AppCompatActivity {
                Integer.parseInt(product[4]),
                Integer.parseInt(product[5])
             ));
-        }
+        } */
+
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference ref = db.getReference("product");
+
+        ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                try {
+                    for( DataSnapshot product : task.getResult().getChildren() )
+                    {
+                        String sellerEmail = "";
+
+                        if( product.hasChild("productSellerEmail") )
+                        {
+                            sellerEmail = product.child("productSellerEmail").getValue().toString();
+                        }
+
+                        if( getIntent().getStringExtra("userEmail").equals(sellerEmail) )
+                        {
+                            String itemName = "", itemDescription = "", itemCategory = "";
+                            long itemPrice = 0;
+                            long itemQuantityInStock = 0;
+
+                            if( product.hasChild("productName") )
+                            {
+                                itemName = product.child("productName").getValue().toString();
+                            }
+                            if( product.hasChild("productDescription") )
+                            {
+                                itemDescription = product.child("productDescription").getValue().toString();
+                            }
+                            if( product.hasChild("productPrice") )
+                            {
+                                itemPrice = (long) product.child("productPrice").getValue();
+                            }
+                            if( product.hasChild("productQuantity") )
+                            {
+                                itemQuantityInStock = (long) product.child("productQuantity").getValue();
+                            }
+                            if( product.hasChild("productCartegory") )
+                            {
+                                itemCategory = product.child("productCartegory").getValue().toString();
+                            }
+
+                            myProducts.add( new ProductModel("", itemName, itemDescription, itemCategory, itemQuantityInStock, itemPrice) );
+                        }
+                        else
+                        {
+                            //this is not this user's product
+                        }
+
+                    }
+
+                    adapter.notifyDataSetChanged();
+                }catch( Exception e )
+                {
+                    Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void setMainMenu(Context context, View view)
@@ -124,6 +191,14 @@ public class MyShopActivity extends AppCompatActivity {
                     String startedFromMyShop = "shop";
                     Intent intent = new Intent(MyShopActivity.this, HomeActivity.class );
                     intent.putExtra("startedFromMyShop", startedFromMyShop);
+
+                    Intent myShopIntent = getIntent();
+                    intent.putExtra("userName", myShopIntent.getStringExtra("userName"));
+                    intent.putExtra("userEmail", myShopIntent.getStringExtra("userEmail"));
+                    intent.putExtra("userPhone", myShopIntent.getStringExtra("userPhone"));
+                    intent.putExtra("userLocation", myShopIntent.getStringExtra("userLocation"));
+                    intent.putExtra("userIsSeller", myShopIntent.getBooleanExtra("userIsSeller", false));
+
                     startActivity(intent);
                     Toast.makeText(MyShopActivity.this, "Soko", Toast.LENGTH_SHORT).show();
                 }

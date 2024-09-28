@@ -38,9 +38,11 @@ public class MyListAdapter extends ArrayAdapter<ListItem> {
 
         ImageView image = currentView.findViewById( R.id.list_item_image);
         TextView desc = currentView.findViewById(R.id.desc );
+        TextView price = currentView.findViewById(R.id.price );
 
         image.setImageResource( R.drawable.food_item );
         desc.setText(item.getDesc());
+        price.setText( String.valueOf(item.getItemPrice()) );
 
 
         return currentView;

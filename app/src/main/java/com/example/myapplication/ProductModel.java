@@ -1,14 +1,14 @@
 package com.example.myapplication;
 
 public class ProductModel {
-    String productImageUri;
-    String productName;
-    String productDescription;
-    String productCategory;
-    int productNumber;
-    int productCost;
+    private String productImageUri;
+    private String productName;
+    private String productDescription;
+    private String productCategory;
+    private long productNumber;
+    private long productCost;
 
-    public ProductModel( String productImageUri, String productName, String productDescription, String productCategory, int productNumber, int productCost)
+    public ProductModel( String productImageUri, String productName, String productDescription, String productCategory, long productNumber, long productCost)
     {
         this.productImageUri = new String(productImageUri);
         this.productName = new String(productName);
@@ -34,11 +34,11 @@ public class ProductModel {
         return productCategory;
     }
 
-    public int getProductNumber() {
+    public long getProductNumber() {
         return productNumber;
     }
 
-    public int getProductCost() {
+    public long getProductCost() {
         return productCost;
     }
 }

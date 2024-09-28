@@ -49,7 +49,8 @@ public class ProductModelAdapter extends ArrayAdapter<ProductModel> {
             TextView productPrice = currentView.findViewById( R.id.product_price );
 
 
-            productImage.setImageBitmap(MediaStore.Images.Media.getBitmap( getAppContext().getContentResolver(), Uri.parse( currentItem.getProductImageUri() ) ));
+            //productImage.setImageBitmap(MediaStore.Images.Media.getBitmap( getAppContext().getContentResolver(), Uri.parse( currentItem.getProductImageUri() ) ));
+            productImage.setImageResource(R.drawable.food_item);
             productName.setText( currentItem.getProductName() );
             productPrice.setText( "Ksh " + currentItem.getProductCost() + "/=" );
 

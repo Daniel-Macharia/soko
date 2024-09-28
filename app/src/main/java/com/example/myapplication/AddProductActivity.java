@@ -218,25 +218,30 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try{
-                    Toast.makeText(getApplicationContext(), "Creating database instance", Toast.LENGTH_SHORT).show();
+                    toast("Creating database instance");
                     FirebaseDatabase db = FirebaseDatabase.getInstance();
 
-                    Toast.makeText(getApplicationContext(), "Getting database reference", Toast.LENGTH_SHORT).show();
+                    toast("Getting database reference");
                     DatabaseReference ref = db.getReference();
 
-                    Toast.makeText(getApplicationContext(), "Adding product", Toast.LENGTH_SHORT).show();
+                    toast("Adding product");
                     ref.child("product").push().setValue(product);
                 }catch( Exception e )
                 {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText( getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    toast("Error: " + e);
                 }
             }
         }).start();
+    }
+
+    private void toast(String message)
+    {
+        new Handler( Looper.getMainLooper() ).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
@@ -244,10 +249,10 @@ public class AddProductActivity extends AppCompatActivity {
 class Product{
     public String productImageUri, productName, productDescription, productCartegory;
     public String productSellerEmail;
-    public int productQuantity, productPrice;
+    public long productQuantity, productPrice;
     public Product( String productSellerEmail, String productImageUri, String productName
             , String productDescription, String productCartegory
-            , int quantity, int price)
+            , long quantity, long price)
     {
         this.productSellerEmail = new String(productSellerEmail);
         this.productImageUri = new String(productImageUri);
