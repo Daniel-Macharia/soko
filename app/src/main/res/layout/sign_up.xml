@@ -226,15 +226,6 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/dark_green"
-            android:text="sign up as; "
-            android:layout_marginTop="8dp"
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -242,46 +233,102 @@
 
             >
 
-            <LinearLayout
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="sign up as: "
+                android:layout_marginTop="8dp"
+                android:gravity="end|top"
+                />
+
+            <RadioGroup
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="start|center"
-                android:paddingStart="4dp"
-                >
-                <Button
-                    android:id="@+id/seller"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/blue"
-                    android:gravity="center"
-                    android:textSize="16sp"
-                    android:text="seller"
-                    android:backgroundTint="@color/dark_green"
-                    />
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="end|center"
-                android:paddingEnd="4dp"
                 >
-                <Button
+
+                <RadioButton
                     android:id="@+id/buyer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/blue"
-                    android:gravity="center"
-                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="buyer"
-                    android:backgroundTint="@color/dark_green"
+                    android:textColor="@color/blue"
                     />
-            </LinearLayout>
 
+                <RadioButton
+                    android:id="@+id/seller"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="seller"
+                    android:textColor="@color/blue"
+                    />
+
+            </RadioGroup>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shop_name_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/shop_name_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="Shop name: "
+                android:gravity="end|center"
+                android:paddingEnd="4dp"
+                />
+
+            <EditText
+                android:id="@+id/shop_name_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="text"
+                android:textSize="16sp"
+                android:hint="enter shop name"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/blue"
+                android:gravity="start|center"
+                android:paddingStart="4dp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="end|center"
+            >
+
+            <Button
+                android:id="@+id/sign_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sign up"
+                android:textColor="@color/blue"
+                android:backgroundTint="@color/dark_green"
+                android:gravity="center"
+
+                />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

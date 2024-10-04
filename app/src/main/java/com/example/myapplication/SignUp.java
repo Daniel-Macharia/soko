@@ -1,12 +1,17 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,9 +25,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUp extends AppCompatActivity {
 
-    private Button seller, buyer;
+    private RadioButton seller, buyer;
+
+    private Button signUp;
+
+    private LinearLayout shopNameContainer;
     private EditText username, email, password, confirmPassword, phone, location;
 
+    private TextView shopNameLabel;
+    private EditText shopNameInput;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -40,31 +51,62 @@ public class SignUp extends AppCompatActivity {
         seller = findViewById( R.id.seller );
         buyer = findViewById( R.id.buyer );
 
+        shopNameLabel = findViewById(R.id.shop_name_label);
+
+        shopNameInput = findViewById(R.id.shop_name_input);
+
+        shopNameContainer = findViewById( R.id.shop_name_container );
+
+        signUp = findViewById( R.id.sign_up );
+
+        //make the shop name input field appear only when seller is selected
+        //shopNameLabel.setMaxHeight(0);
+        //shopNameInput.setMaxHeight(0);
+        shopNameContainer.removeAllViews();
+
         seller.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                String user, pass, confirm, mail, phoneNumber, loc;
+            public void onClick(View view) {
+                Toast.makeText(SignUp.this, "selected seller!", Toast.LENGTH_SHORT).show();
+                /*TextView label = new TextView(SignUp.this);
+                label.setText("Shop name:");
+                label.setGravity(Gravity.END|Gravity.CENTER);
+                label.setTextColor(Color.BLACK);
 
-                user = username.getText().toString();
-                pass = password.getText().toString();
-                confirm = confirmPassword.getText().toString();
-                mail = email.getText().toString();
-                phoneNumber = phone.getText().toString();
-                loc = location.getText().toString();
+                EditText input = new EditText(SignUp.this);
+                input.setHint("enter shop name");
+                input.setGravity(Gravity.START|Gravity.CENTER);
+                input.setTextColor( getResources().getColor(R.color.blue) );
 
-                if(validateInput(user, phoneNumber, pass, confirm, mail, "seller"))
-                {
-                    addUser( user, pass, phoneNumber, mail, loc, true);
-                    //createNewUserAccount( user, phoneNumber, pass, mail, "seller");
-                    //launchLogin();
-                }
+                label.setId(R.id.shop_name_label);
+                input.setId(R.id.shop_name_input);
+
+                shopNameContainer.addView(label);
+                shopNameContainer.addView(input); */
+
+                //shopNameLabel.setMaxHeight(32);
+                //shopNameInput.setMaxHeight(32);
+                shopNameContainer.addView(shopNameLabel);
+                shopNameContainer.addView(shopNameInput);
             }
         });
 
         buyer.setOnClickListener(new View.OnClickListener() {
             @Override
+            public void onClick(View view) {
+                Toast.makeText(SignUp.this, "selected buyer!", Toast.LENGTH_SHORT).show();
+                //shopNameLabel.setMaxHeight(0);
+                //shopNameInput.setMaxHeight(0);
+                shopNameContainer.removeAllViews();
+            }
+        });
+
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                String user, pass, confirm, mail, phoneNumber, loc;
+                String user, pass, confirm, mail, phoneNumber, loc, userType;
+
+                userType = ( seller.isChecked() ? "seller" : ( buyer.isChecked() ? "buyer" : null));
 
                 user = username.getText().toString();
                 pass = password.getText().toString();
@@ -73,10 +115,10 @@ public class SignUp extends AppCompatActivity {
                 phoneNumber = phone.getText().toString();
                 loc = location.getText().toString();
 
-                if(validateInput(user, phoneNumber, pass, confirm, mail, "buyer"))
+                if(validateInput(user, phoneNumber, pass, confirm, mail, userType))
                 {
-                    addUser( user, pass, phoneNumber, mail, loc, false);
-                    //createNewUserAccount( user, phoneNumber, pass, mail, "buyer");
+                    addUser( user, pass, phoneNumber, mail, loc, true);
+                    //createNewUserAccount( user, phoneNumber, pass, mail, "seller");
                     //launchLogin();
                 }
             }
@@ -162,6 +204,12 @@ public class SignUp extends AppCompatActivity {
         else
         {
             Toast.makeText(getApplicationContext(), "Password and the confirm password do not match!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if( userType == null )
+        {
+            Toast.makeText(getApplicationContext(), "Please select a 'sign up' option.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
