@@ -60,32 +60,11 @@ public class SignUp extends AppCompatActivity {
         signUp = findViewById( R.id.sign_up );
 
         //make the shop name input field appear only when seller is selected
-        //shopNameLabel.setMaxHeight(0);
-        //shopNameInput.setMaxHeight(0);
         shopNameContainer.removeAllViews();
 
         seller.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(SignUp.this, "selected seller!", Toast.LENGTH_SHORT).show();
-                /*TextView label = new TextView(SignUp.this);
-                label.setText("Shop name:");
-                label.setGravity(Gravity.END|Gravity.CENTER);
-                label.setTextColor(Color.BLACK);
-
-                EditText input = new EditText(SignUp.this);
-                input.setHint("enter shop name");
-                input.setGravity(Gravity.START|Gravity.CENTER);
-                input.setTextColor( getResources().getColor(R.color.blue) );
-
-                label.setId(R.id.shop_name_label);
-                input.setId(R.id.shop_name_input);
-
-                shopNameContainer.addView(label);
-                shopNameContainer.addView(input); */
-
-                //shopNameLabel.setMaxHeight(32);
-                //shopNameInput.setMaxHeight(32);
                 shopNameContainer.addView(shopNameLabel);
                 shopNameContainer.addView(shopNameInput);
             }
@@ -94,9 +73,6 @@ public class SignUp extends AppCompatActivity {
         buyer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(SignUp.this, "selected buyer!", Toast.LENGTH_SHORT).show();
-                //shopNameLabel.setMaxHeight(0);
-                //shopNameInput.setMaxHeight(0);
                 shopNameContainer.removeAllViews();
             }
         });
@@ -104,84 +80,141 @@ public class SignUp extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user, pass, confirm, mail, phoneNumber, loc, userType;
+                try {
 
-                userType = ( seller.isChecked() ? "seller" : ( buyer.isChecked() ? "buyer" : null));
+                    String user, pass, confirm, mail, phoneNumber, loc, userType, shopName;
 
-                user = username.getText().toString();
-                pass = password.getText().toString();
-                confirm = confirmPassword.getText().toString();
-                mail = email.getText().toString();
-                phoneNumber = phone.getText().toString();
-                loc = location.getText().toString();
+                    userType = ( seller.isChecked() ? "seller" : ( buyer.isChecked() ? "buyer" : null));
 
-                if(validateInput(user, phoneNumber, pass, confirm, mail, userType))
+                    shopName = ( seller.isChecked() ? shopNameInput.getText().toString() : null);
+
+                    user = username.getText().toString();
+                    pass = password.getText().toString();
+                    confirm = confirmPassword.getText().toString();
+                    mail = email.getText().toString();
+                    phoneNumber = phone.getText().toString();
+                    loc = location.getText().toString();
+
+                    if(validateInput(user, phoneNumber, pass, confirm, mail, userType, shopName))
+                    {
+                        addUser( user, pass, phoneNumber, mail, loc, userType, shopName);
+                    }
+                }catch(Exception e)
                 {
-                    addUser( user, pass, phoneNumber, mail, loc, true);
-                    //createNewUserAccount( user, phoneNumber, pass, mail, "seller");
-                    //launchLogin();
+                    Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void addUser( String userName, String userPassword, String userPhone, String userMail, String userLocation, boolean userIsSeller)
+    private void addUser( String userName, String userPassword, String userPhone, String userMail, String userLocation, String userType, String shopName)
     {
-        User user = new User(userName, userPassword, userPhone, userMail, userLocation, userIsSeller);
-
-        if( UtilityClass.isNetworkConnectionAvailable(  getApplicationContext(), new Handler(Looper.getMainLooper()) ))
+        if(userType.equals("seller"))
         {
-            FirebaseDatabase db = FirebaseDatabase.getInstance();
-            DatabaseReference ref = db.getReference("user");
+            Seller user = new Seller(userName, userPassword, userPhone, userMail, userLocation, shopName);
 
-            ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    boolean userAvailable = false;
-                    for( DataSnapshot child : task.getResult().getChildren() )
-                    {
-                        if( child.hasChild("userEmail") )
-                        {
-                            String email = child.child("userEmail").getValue().toString();
-                            if( user.userEmail.equals(email) )
+            if( UtilityClass.isNetworkConnectionAvailable( getApplicationContext(), new Handler(Looper.getMainLooper()) ) )
+            {
+                FirebaseDatabase db = FirebaseDatabase.getInstance();
+
+                DatabaseReference ref = db.getReference("seller");
+
+                ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        try {
+                            String userMail = "", sellerPhone;
+                            for( DataSnapshot seller : task.getResult().getChildren() )
                             {
-                                userAvailable = true;
-                                break;
+                                if( seller.hasChild("userEmail") )
+                                {
+                                    userMail = new String(seller.child("userEmail").getValue().toString());
+                                }
+
+                                if( user.userEmail.equals(userMail) )
+                                {
+                                    Toast.makeText(getApplicationContext(), "A user with this email exists!\nPlease log in", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                             }
+
+                            ref.push().setValue(user);
+                            Toast.makeText(getApplicationContext(), "Account successfully created!", Toast.LENGTH_SHORT).show();
+                            launchLogin( new String( user.userEmail ) );
+                        }catch(Exception e)
+                        {
+                            Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
                         }
                     }
+                });
 
-                    if( !userAvailable )
-                    {
-                        ref.push().setValue(user);
-                        //add user to local database
-                        createNewUserAccount(user);
-                        Toast.makeText(getApplicationContext(), "Account created successfully!", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        //perform user account recovery
-                        Toast.makeText(getApplicationContext(), "A user with this email exists!" +
-                                "\nEnter details to login.", Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    launchLogin(userMail);
-                }
-            });
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "No internet connection." +
+                        "\nPlease check your internet connection and try again.", Toast.LENGTH_SHORT).show();
+            }
         }
-        else {
-            Toast.makeText(getApplicationContext(), "No internet connection!" +
-                    "\nPlease connect to the internet and try again.", Toast.LENGTH_SHORT).show();
+        else
+        {
+            Buyer user = new Buyer( userName, userPassword, userPhone, userMail, userLocation);
+
+            if( UtilityClass.isNetworkConnectionAvailable( getApplicationContext(), new Handler(Looper.getMainLooper()) ) )
+            {
+                FirebaseDatabase db = FirebaseDatabase.getInstance();
+
+                DatabaseReference ref = db.getReference("buyer");
+
+                ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        try
+                        {
+                            String userMail = "", buyerPhone;
+                            for( DataSnapshot buyer : task.getResult().getChildren() )
+                            {
+                                if( buyer.hasChild("userEmail") )
+                                {
+                                    userMail = new String(buyer.child("userEmail").getValue().toString());
+                                }
+
+                                if( user.userEmail.equals(userMail) )
+                                {
+                                    Toast.makeText(getApplicationContext(), "A user with this email exists!\nPlease log in", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+
+                            ref.push().setValue(user);
+                            Toast.makeText(getApplicationContext(), "Account successfully created!", Toast.LENGTH_SHORT).show();
+                            launchLogin( new String( user.userEmail ) );
+                        }catch(Exception e)
+                        {
+                            Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "No internet connection." +
+                        "\nPlease check your internet connection and try again.", Toast.LENGTH_SHORT).show();
+            }
         }
+
     }
 
-    private boolean validateInput(String username, String phoneNumber, String password, String confirmPassword, String email, String userType)
+    private boolean validateInput(String username, String phoneNumber, String password, String confirmPassword, String email, String userType, String shopName)
     {
-        if( !UtilityClass.isNameValid( username ) )
+        if( username.equals("") )
         {
-            Toast.makeText(getApplicationContext(), "Username cannot be blank\n" +
-                    "It may only contain characters and digits", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Username cannot be blank\n", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(!UtilityClass.isNameValid( username ))
+        {
+            Toast.makeText(getApplicationContext(), "Invalid username!" +
+                    "\n it may only contain characters and digits", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -213,14 +246,22 @@ public class SignUp extends AppCompatActivity {
             return false;
         }
 
+        if( shopName != null && !UtilityClass.isValidShopName(shopName) )
+        {
+            Toast.makeText(getApplicationContext(), "Invalid shop name!" +
+                    "\nA shop name may only contain characters and numbers " +
+                    "\nhaving a maximum of 30 characters.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return true;
     }
 
-    private void createNewUserAccount( User user )
+    private void createNewUserAccount( Buyer user )
     {
-        LocalDatabase db = new LocalDatabase( getApplicationContext() );
+        /*LocalDatabase db = new LocalDatabase( getApplicationContext() );
         db.open();
-        long id = db.addNewUser( user.userName, user.userPhone, user.userName, user.userEmail, user.userIsSeller);
+        long id = db.addNewUser( user.userName, user.userPhone, user.userName, user.userEmail);
         db.close();
 
         if( id != -1 )
@@ -228,7 +269,7 @@ public class SignUp extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Account Created Successfully!", Toast.LENGTH_SHORT).show();
             clearFields();
         }
-
+        */
     }
 
     private void clearFields()
@@ -238,6 +279,9 @@ public class SignUp extends AppCompatActivity {
         email.setText("");
         password.setText("");
         confirmPassword.setText("");
+        shopNameInput.setText("");
+        seller.setChecked(false);
+        buyer.setChecked(false);
     }
 
     private void launchLogin(String userMail)
@@ -250,19 +294,31 @@ public class SignUp extends AppCompatActivity {
 }
 
 
-class User
+class Buyer
 {
     public String userName, userPhone, userEmail, userLocation, userPassword;
-    public boolean userIsSeller;
-    public User( String userName, String userPassword
+    public Buyer( String userName, String userPassword
             , String userPhone, String userEmail
-            , String userLocation, boolean userIsSeller)
+            , String userLocation)
     {
         this.userName = new String(userName);
         this.userPhone = new String(userPhone);
         this.userEmail = new String(userEmail);
         this.userLocation = new String(userLocation);
         this.userPassword = new String(userPassword);
-        this.userIsSeller = userIsSeller;
     }
+}
+
+class Seller extends Buyer
+{
+    public String shopName;
+
+    public Seller( String userName, String userPassword
+            , String userPhone, String userEmail
+            , String userLocation, String shopName)
+    {
+        super( userName, userPassword, userPhone, userEmail, userLocation);
+        this.shopName = new String( shopName );
+    }
+
 }

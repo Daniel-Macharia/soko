@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -48,6 +49,26 @@ public class HomeActivity extends AppCompatActivity {
 
         adapter = new MyListAdapter(getApplicationContext(), items);
         listItems.setAdapter( adapter );
+
+        if(ActivityCompat.checkSelfPermission( HomeActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED )
+        {
+            ActivityCompat.requestPermissions(HomeActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 0);
+        }
+
+        listItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(HomeActivity.this, ProductActivity.class);
+                intent.putExtra("productName", items.get(i).getItemName() );
+                intent.putExtra("productDescription", items.get(i).getDesc() );
+                intent.putExtra("productPrice", "" + items.get(i).getItemPrice() );
+                intent.putExtra("quantityInStock", items.get(i).getItemQuantityInStock() );
+                intent.putExtra("sellerEmail", items.get(i).getSellerEmail() );
+                intent.putExtra("sellerPhone", items.get(i).getSellerPhone() );
+                intent.putExtra("shopName", items.get(i).getShopName() );
+                startActivity(intent);
+            }
+        });
 
         Intent intent = getIntent();
         String startedFromMyShop = intent.getStringExtra("startedFromMyShop");
@@ -107,57 +128,81 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setGridItems()
     {
-        /*for( int i = 0; i <= 20; i++)
-        {
-            items.add( new ListItem( 0, "Item Name", "Item " + i, 0, 0.0, 0) );
-        }*/
+        String userEmail = ( (getIntent().getStringExtra("userEmail") == null) ? "" : getIntent().getStringExtra("userEmail") );
 
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference ref = db.getReference("product");
+        DatabaseReference ref = db.getReference("seller");
 
         ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 try {
-                    for( DataSnapshot product : task.getResult().getChildren() )
+                    for( DataSnapshot seller : task.getResult().getChildren() )
                     {
                         String sellerEmail = "";
 
-                        if( product.hasChild("productSellerEmail") )
+                        if( seller.hasChild("userEmail") )
                         {
-                            sellerEmail = product.child("productSellerEmail").getValue().toString();
+                            sellerEmail = seller.child("userEmail").getValue().toString();
                         }
 
                         //add only products sold by other people
-                        if( !getIntent().getStringExtra("userEmail").equals(sellerEmail) )
+                        if( !userEmail.equals(sellerEmail) )
                         {
-                            String itemName = "", itemDescription = "";
-                            long itemPrice = 0;
-                            long itemQuantityInStock = 0;
+                            if( seller.hasChild("products") )
+                            {
+                                DatabaseReference productsRef = seller.child("products").getRef();
 
-                            if( product.hasChild("productName") )
-                            {
-                                itemName = product.child("productName").getValue().toString();
-                            }
-                            if( product.hasChild("productDescription") )
-                            {
-                                itemDescription = product.child("productDescription").getValue().toString();
-                            }
-                            if( product.hasChild("productPrice") )
-                            {
-                                itemPrice = (long) product.child("productPrice").getValue();
-                            }
-                            if( product.hasChild("productQuantity") )
-                            {
-                                itemQuantityInStock = (long) product.child("productQuantity").getValue();
-                            }
+                                productsRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        for( DataSnapshot product : task.getResult().getChildren() )
+                                        {
+                                            String itemName = "", itemDescription = "", sellerMail = "", sellerPhone = "", shopName = "";
+                                            long itemPrice = 0;
+                                            long itemQuantityInStock = 0;
 
-                            items.add( new ListItem(0, itemName, itemDescription, 0, itemPrice, itemQuantityInStock) );
+                                            if( product.hasChild("productName") )
+                                            {
+                                                itemName = product.child("productName").getValue().toString();
+                                            }
+                                            if( product.hasChild("productDescription") )
+                                            {
+                                                itemDescription = product.child("productDescription").getValue().toString();
+                                            }
+                                            if( product.hasChild("productPrice") )
+                                            {
+                                                itemPrice = (long) product.child("productPrice").getValue();
+                                            }
+                                            if( product.hasChild("productQuantity") )
+                                            {
+                                                itemQuantityInStock = (long) product.child("productQuantity").getValue();
+                                            }
+
+                                            if( seller.hasChild("userEmail") )
+                                            {
+                                                sellerMail = seller.child("userEmail").getValue().toString();
+                                            }
+
+                                            if( seller.hasChild("userPhone") )
+                                            {
+                                                sellerPhone = seller.child("userPhone").getValue().toString();
+                                            }
+
+                                            if( seller.hasChild("shopName") )
+                                            {
+                                                shopName = seller.child("shopName").getValue().toString();
+                                            }
+
+                                            items.add( new ListItem(0, itemName, itemDescription, 0, itemPrice, itemQuantityInStock, sellerMail, sellerPhone, shopName) );
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
                         }
 
                     }
-
-                    adapter.notifyDataSetChanged();
                 }catch(Exception e)
                 {
                     Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();

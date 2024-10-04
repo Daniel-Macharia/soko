@@ -45,6 +45,23 @@ public class UtilityClass {
         return (!email.equals("")) && email.matches( emailRegex );
     }
 
+    public static boolean isValidShopName( String shopName )
+    {
+        if( shopName == null )
+        {
+            return false;
+        }
+
+        String shopNameRegex = "^[a-zA-Z0-9]{1,30}$";
+
+        if( !shopName.matches( shopNameRegex ) )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public static byte[] convertBitmapToByteArray( Bitmap image )
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

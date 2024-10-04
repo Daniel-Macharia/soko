@@ -19,8 +19,12 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -150,14 +154,15 @@ public class AddProductActivity extends AppCompatActivity {
                     int numInStock = Integer.parseInt(num);
                     int productPrice = Integer.parseInt(price);
                     //add product to local db
-                    LocalDatabase db = new LocalDatabase(getApplicationContext());
+                  /*  LocalDatabase db = new LocalDatabase(getApplicationContext());
                     db.open();
                     db.addProduct(productPictureUri, name, desc, cart, numInStock, productPrice);
-                    db.close();
+                    db.close(); */
 
                     String productSellerEmail = getIntent().getStringExtra("userEmail");
                     //add product to cloud storage
-                    addProductToSoko( productSellerEmail, productPictureUri, name, desc, cart, numInStock, productPrice);
+                    Toast.makeText(getApplicationContext(), "Adding product using email: " + productSellerEmail, Toast.LENGTH_SHORT).show();
+                    addProductToSoko( new String(productSellerEmail), productPictureUri, name, desc, cart, numInStock, productPrice);
 
                     //update the grid view in the main screen
                     MyShopActivity.adapter.addRefreshList( new ProductModel(productPictureUri,
@@ -211,21 +216,41 @@ public class AddProductActivity extends AppCompatActivity {
             , String productName, String productDescription
             , String productCartegory, int quantity, int price)
     {
-        Product product = new Product( productSellerEmail, productImageUri, productName
+        Product product = new Product( productImageUri, productName
                 , productDescription, productCartegory, quantity, price);
-        Toast.makeText(getApplicationContext(), "Created product. Now adding to firebase...", Toast.LENGTH_SHORT).show();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
-                    toast("Creating database instance");
                     FirebaseDatabase db = FirebaseDatabase.getInstance();
 
-                    toast("Getting database reference");
-                    DatabaseReference ref = db.getReference();
+                    DatabaseReference ref = db.getReference("seller");
+                    ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            String sellerMail = "";
+                            for( DataSnapshot seller : task.getResult().getChildren() )
+                            {
+                                if( seller.hasChild("userEmail") )
+                                {
+                                    sellerMail = seller.child("userEmail").getValue().toString();
+                                }
 
-                    toast("Adding product");
-                    ref.child("product").push().setValue(product);
+                                if( sellerMail.equals(productSellerEmail) )
+                                {
+                                    //if( seller.hasChild("shopProducts") )
+                                    {
+                                        DatabaseReference productRef = seller.child("products").getRef();
+
+                                        productRef.push().setValue(product);
+                                    }
+
+                                    return;
+                                }
+                            }
+                        }
+                    });
                 }catch( Exception e )
                 {
                     toast("Error: " + e);
@@ -248,13 +273,11 @@ public class AddProductActivity extends AppCompatActivity {
 
 class Product{
     public String productImageUri, productName, productDescription, productCartegory;
-    public String productSellerEmail;
     public long productQuantity, productPrice;
-    public Product( String productSellerEmail, String productImageUri, String productName
+    public Product( String productImageUri, String productName
             , String productDescription, String productCartegory
             , long quantity, long price)
     {
-        this.productSellerEmail = new String(productSellerEmail);
         this.productImageUri = new String(productImageUri);
         this.productName = new String(productName);
         this.productDescription = new String(productDescription);

@@ -82,89 +82,72 @@ public class LoginActivity extends AppCompatActivity {
     private void checkLoginCredentials( String userEmail, String userPass)
     {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference ref = db.getReference("user");
+        DatabaseReference ref = db.getReference("buyer");
 
-        ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                String email = "", pass = "";
-                User correctUser = new User("", "", "", "", "", false);
-                boolean userIsSeller = false, isValid = false;
-                for( DataSnapshot child : task.getResult().getChildren() )
-                {
-                    if( child.hasChild("userEmail") )
-                    {
-                        email = child.child("userEmail").getValue().toString();
-                    }
+        verifyUser( ref, userEmail, userPass, true);
+    }
 
-                    if( child.hasChild("userPassword") )
+    private boolean verifyUser( DatabaseReference ref, String userEmail, String userPassword, boolean moreUsers)
+    {
+        try {
+            ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    String email = "", pass = "";
+                    for( DataSnapshot child : task.getResult().getChildren() )
                     {
-                        pass = child.child("userPassword").getValue().toString();
-                    }
-
-                    if( child.hasChild("userIsSeller") )
-                    {
-                        userIsSeller = (boolean) child.child("userIsSeller").getValue();
-                    }
-
-                    if( userEmail.equals( email ) )
-                    {
-                        if(userPass.equals( pass ))
+                        if( child.hasChild("userEmail") )
                         {
-                            //valid user credentials. allow login
-                            isValid = true;
-
-                            correctUser.userName = new String( child.child("userName").getValue().toString());
-                            correctUser.userPhone = new String( child.child("userPhone").getValue().toString());
-                            correctUser.userEmail = new String( child.child("userEmail").getValue().toString());
-                            correctUser.userLocation = new String( child.child("userLocation").getValue().toString());
-                            correctUser.userIsSeller = (boolean) child.child("userIsSeller").getValue();
-                            correctUser.userPassword = ""; // new String( child.child("userLocation").getValue().toString());
-
-                            break;
+                            email = child.child("userEmail").getValue().toString();
                         }
-                        else
+
+                        if( child.hasChild("userPassword") )
                         {
-                            Toast.makeText(getApplicationContext(), "Invalid password!" +
-                                    "\nPlease confirm and try again", Toast.LENGTH_SHORT).show();
-                            forgotPassword.setVisibility(View.VISIBLE);
-                            password.setText("");
-                            return;
+                            pass = child.child("userPassword").getValue().toString();
+                        }
+
+                        if( userEmail.equals( email ) )
+                        {
+                            if(userPassword.equals( pass ))
+                            {
+                                Intent intent = new Intent( LoginActivity.this, moreUsers ? HomeActivity.class : MyShopActivity.class );
+                                intent.putExtra("userName", new String( child.child("userName").getValue().toString()));
+                                intent.putExtra("userEmail", new String( child.child("userEmail").getValue().toString()));
+                                intent.putExtra("userPhone", new String( child.child("userPhone").getValue().toString()));
+                                intent.putExtra("userLocation", new String( child.child("userLocation").getValue().toString()));
+
+                                startActivity(intent);
+                                finishAffinity();
+
+                                return;
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), "Invalid password!" +
+                                        "\nPlease confirm and try again", Toast.LENGTH_SHORT).show();
+                                forgotPassword.setVisibility(View.VISIBLE);
+                                password.setText("");
+                                return;
+                            }
                         }
                     }
-                }
 
-                if( isValid )
-                {
-                    Intent intent;
-                    if( userIsSeller )
+                    if( moreUsers )
                     {
-                        intent = new Intent(LoginActivity.this, MyShopActivity.class );
-                    }
-                    else
-                    {
-                        intent = new Intent(LoginActivity.this, HomeActivity.class );
+                        DatabaseReference buyerRef = ref.getDatabase().getReference("seller");
+                        verifyUser( buyerRef, new String(userEmail), new String(userPassword), false);
                     }
 
-                    intent.putExtra("userName", correctUser.userName);
-                    intent.putExtra("userEmail", correctUser.userEmail);
-                    intent.putExtra("userPhone", correctUser.userPhone);
-                    intent.putExtra("userLocation", correctUser.userLocation);
-                    intent.putExtra("userIsSeller", correctUser.userIsSeller);
+                    Toast.makeText(getApplicationContext(), "No user with specified email exists!" +
+                            "\nPlease sign up", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }catch(Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
+        }
 
-                    startActivity(intent);
-                    finishAffinity();
-                }
-                else {
-                    //invalid credentials. Alert user
-                    Toast.makeText(getApplicationContext(), "No user with the entered email exists!" +
-                            "\nPlease sign up.", Toast.LENGTH_SHORT).show();
-                    /*Intent intent = new Intent( LoginActivity.this, SignUp.class);
-                    startActivity(intent);
-                    finishAffinity();*/
-                }
-            }
-        });
+        return false;
     }
 
     @Override
