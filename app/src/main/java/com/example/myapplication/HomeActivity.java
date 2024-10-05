@@ -80,10 +80,7 @@ public class HomeActivity extends AppCompatActivity {
             menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(HomeActivity.this, MyShopActivity.class );
-                    startActivity( intent );
-
-                    finishAffinity();
+                    finish();
                 }
             });
 

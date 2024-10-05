@@ -106,10 +106,7 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick( View view )
             {
-                Intent intent = new Intent( AddProductActivity.this, MyShopActivity.class );
-                startActivity(intent);
-
-                finishAffinity();
+                finish();
             }
         });
 

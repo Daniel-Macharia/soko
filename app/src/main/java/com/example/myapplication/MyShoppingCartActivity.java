@@ -45,22 +45,7 @@ public class MyShoppingCartActivity extends AppCompatActivity {
             @Override
             public void onClick( View view )
             {
-                Intent intent;
-
-                Intent i = getIntent();
-                String startedFromMyShop = i.getStringExtra("startedFromMyShop");
-                if( startedFromMyShop != null && startedFromMyShop.equals("shop") )
-                {
-                    intent = new Intent( MyShoppingCartActivity.this, MyShopActivity.class );
-                }
-                else
-                {
-                    intent = new Intent( MyShoppingCartActivity.this, HomeActivity.class );
-                }
-
-                startActivity(intent);
-
-                finishAffinity();
+                finish();
             }
         });
 

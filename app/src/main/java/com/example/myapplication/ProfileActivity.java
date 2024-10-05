@@ -86,33 +86,15 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String isFromShop = intent.getStringExtra("isFromShop");
 
-        if( isFromShop != null && isFromShop.equals("shop") )
-        {
-            homeIcon.setOnClickListener( new View.OnClickListener(){
 
-                @Override
-                public void onClick( View view )
-                {
-                    Intent intent = new Intent( ProfileActivity.this, MyShopActivity.class );
-                    startActivity(intent);
+        homeIcon.setOnClickListener( new View.OnClickListener(){
 
-                    finishAffinity();
-                }
-            });
-        }
-        else {
-            homeIcon.setOnClickListener( new View.OnClickListener(){
-
-                @Override
-                public void onClick( View view )
-                {
-                    Intent intent = new Intent( ProfileActivity.this, HomeActivity.class );
-                    startActivity(intent);
-
-                    finishAffinity();
-                }
-            });
-        }
+            @Override
+            public void onClick( View view )
+            {
+                finish();
+            }
+        });
 
         logoutIcon.setOnClickListener( new View.OnClickListener(){
 
