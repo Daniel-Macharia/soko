@@ -90,7 +90,7 @@ public class MyShopActivity extends AppCompatActivity {
                 Toast.makeText(MyShopActivity.this, "Add new Product!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MyShopActivity.this, AddProductActivity.class );
 
-                intent.putExtra("userEmail", getIntent().getStringExtra("userEmail"));
+                intent.putExtra("userEmail", new String( getIntent().getStringExtra("userEmail") ) );
 
                 startActivity(intent);
             }

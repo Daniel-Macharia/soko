@@ -121,10 +121,10 @@ public class HomeActivity extends AppCompatActivity {
                     Intent intent = new Intent( HomeActivity.this, ProfileActivity.class );
 
                     Intent homeIntent = getIntent();
-                    intent.putExtra("userName", homeIntent.getStringExtra("userName"));
-                    intent.putExtra("userEmail", homeIntent.getStringExtra("userEmail"));
-                    intent.putExtra("userPhone", homeIntent.getStringExtra("userPhone"));
-                    intent.putExtra("userLocation", homeIntent.getStringExtra("userLocation"));
+                    intent.putExtra("userName", new String( homeIntent.getStringExtra("userName") ) );
+                    intent.putExtra("userEmail", new String( homeIntent.getStringExtra("userEmail") ) );
+                    intent.putExtra("userPhone", new String( homeIntent.getStringExtra("userPhone") ) );
+                    intent.putExtra("userLocation", new String( homeIntent.getStringExtra("userLocation") ) );
                     intent.putExtra("userIsSeller", homeIntent.getBooleanExtra("userIsSeller", true));
 
                     startActivity( intent );
