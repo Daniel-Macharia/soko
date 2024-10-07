@@ -1,22 +1,33 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class ProductActivity extends AppCompatActivity {
 
     private LinearLayout phone, mail;
     private TextView shopName, productName, productDesc, productPrice;
+
+    private ImageView productImage;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -31,6 +42,7 @@ public class ProductActivity extends AppCompatActivity {
         productName = findViewById( R.id.productName );
         productPrice = findViewById( R.id.productPrice );
         productDesc = findViewById( R.id.productDescription );
+        productImage = findViewById( R.id.productImage );
 
         String shop_name, product_name, product_desc, product_price, product_quantity, sellerEmail, sellerPhone;
 
@@ -48,7 +60,9 @@ public class ProductActivity extends AppCompatActivity {
         shopName.setText(shop_name);
         productName.setText(product_name);
         productDesc.setText(product_desc);
-        productPrice.setText(product_price);
+        productPrice.setText("ksh " + product_price + "/=");
+
+        setProductImage();
 
         phone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,11 +78,44 @@ public class ProductActivity extends AppCompatActivity {
 
                 builder.append("Name: " + product_name + "\n");
                 builder.append("Description: " + product_desc + "\n");
-                builder.append("Price: " + product_price + "\n");
+                builder.append("Price: ksh " + product_price + "/=\n");
                 emailSeller(sellerEmail, builder.toString());
             }
         });
 
+    }
+
+    private void setProductImage()
+    {
+        try {
+            Intent intent = getIntent();
+
+            String productImageUri = intent.getStringExtra("productImageUri");
+
+            if( productImageUri == null )
+            {
+                productImageUri = "";
+                return;
+            }
+
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference(Uri.parse(productImageUri).getLastPathSegment());
+
+            storageRef.getBytes(2 * 1024 * 1024 )
+                    .addOnCompleteListener(new OnCompleteListener<byte[]>() {
+                        @Override
+                        public void onComplete(@NonNull Task<byte[]> task) {
+                            byte[] imageData = task.getResult();
+
+                            Bitmap bm = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+
+                            productImage.setImageBitmap(bm);
+                        }
+                    });
+        }catch(Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void callSeller(String sellerPhone)
@@ -95,7 +142,7 @@ public class ProductActivity extends AppCompatActivity {
     {
         try {
             String mailSubject = "product requisition.";
-            String mailBody = "I am writing in requisition of the product: \n" + productData;
+            String mailBody = "I am writing in requisition of the product: \n\n" + productData;
             Intent selectorIntent = new Intent(Intent.ACTION_SENDTO);
             selectorIntent.setData(Uri.parse("mailto:"));
 
@@ -106,8 +153,6 @@ public class ProductActivity extends AppCompatActivity {
             emailIntent.setSelector( selectorIntent );
 
             startActivity( Intent.createChooser( emailIntent, "Send Email") );
-
-            Toast.makeText(getApplicationContext(), "Sending seller and email...", Toast.LENGTH_SHORT).show();
         }catch(Exception e)
         {
             Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();

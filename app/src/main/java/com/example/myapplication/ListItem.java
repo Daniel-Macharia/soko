@@ -2,7 +2,7 @@ package com.example.myapplication;
 
 public class ListItem {
 
-    private int itemImageID;
+    private String itemImageUri;
     private String itemName;
     private String itemDesc;
     private double itemPrice;
@@ -11,9 +11,9 @@ public class ListItem {
 
     private String sellerEmail, sellerPhone, shopName;
 
-    public ListItem( int itemImageID, String itemName, String itemDesc, int addToCartIconID, double itemPrice, long itemQuantityInStock, String sellerEmail, String sellerPhone, String shopName)
+    public ListItem( String itemImageUri, String itemName, String itemDesc, int addToCartIconID, double itemPrice, long itemQuantityInStock, String sellerEmail, String sellerPhone, String shopName)
     {
-        this.itemImageID = itemImageID;
+        this.itemImageUri = new String(itemImageUri);
         this.itemName = new String(itemName);
         this.itemDesc = new String(itemDesc);
         this.addToCartIconID = addToCartIconID;
@@ -25,9 +25,9 @@ public class ListItem {
         this.shopName = new String( shopName );
     }
 
-    public void setItemImageID( int itemImageID )
+    public void setItemImageUri( String itemImageUri )
     {
-        this.itemImageID = itemImageID;
+        this.itemImageUri = itemImageUri;
     }
     public void setItemName( String itemName )
     {
@@ -43,7 +43,7 @@ public class ListItem {
         this.addToCartIconID = addToCartIconID;
     }
 
-    public int getItemImageID(){return this.itemImageID;}
+    public String getItemImageUri(){return this.itemImageUri;}
 
     public String getItemName(){return this.itemName;}
     public String getDesc(){ return this.itemDesc;}

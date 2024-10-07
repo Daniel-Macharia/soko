@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -11,6 +13,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -50,9 +59,11 @@ public class ProductModelAdapter extends ArrayAdapter<ProductModel> {
 
 
             //productImage.setImageBitmap(MediaStore.Images.Media.getBitmap( getAppContext().getContentResolver(), Uri.parse( currentItem.getProductImageUri() ) ));
-            productImage.setImageResource(R.drawable.food_item);
+            productImage.setImageResource(R.drawable.downloading);
             productName.setText( currentItem.getProductName() );
             productPrice.setText( "Ksh " + currentItem.getProductCost() + "/=" );
+
+            setItemImage( productImage, currentItem.getProductImageUri() );
 
             productRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,5 +90,47 @@ public class ProductModelAdapter extends ArrayAdapter<ProductModel> {
     {
         list.remove( itemPosition );
         notifyDataSetChanged();
+    }
+
+    private void setItemImage( ImageView image, String itemImageUri)
+    {
+        try{
+            toast("getting image from firebase");
+            String path = Uri.parse(itemImageUri).getLastPathSegment();
+
+            if( path == null )
+            {
+                path = "";
+            }
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference imageRef = storage.getReference().child(path);
+
+            imageRef.getBytes( 2 * 1024 * 1024 )//read a max of 2 megabytes
+                    .addOnCompleteListener(new OnCompleteListener<byte[]>() {
+                        @Override
+                        public void onComplete(@NonNull Task<byte[]> task) {
+                            try
+                            {
+                                byte[] imageData = task.getResult();
+
+                                Bitmap bm = BitmapFactory.decodeByteArray( imageData, 0, imageData.length);
+                                image.setImageBitmap(bm);
+                                toast("image set..");
+                            }catch( Exception e )
+                            {
+                                toast("Error: " + e);
+                            }
+                        }
+                    });
+
+        }catch( Exception e )
+        {
+            toast("Error: " + e );
+        }
+    }
+
+    private void toast(String message)
+    {
+        Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

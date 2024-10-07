@@ -22,11 +22,16 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
@@ -213,47 +218,108 @@ public class AddProductActivity extends AppCompatActivity {
             , String productName, String productDescription
             , String productCartegory, int quantity, int price)
     {
-        Product product = new Product( productImageUri, productName
-                , productDescription, productCartegory, quantity, price);
+        try {
+            FirebaseDatabase db = FirebaseDatabase.getInstance();
+            DatabaseReference ref = db.getReference("seller");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    FirebaseDatabase db = FirebaseDatabase.getInstance();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference();
 
-                    DatabaseReference ref = db.getReference("seller");
-                    ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            String sellerMail = "";
-                            for( DataSnapshot seller : task.getResult().getChildren() )
-                            {
-                                if( seller.hasChild("userEmail") )
-                                {
-                                    sellerMail = seller.child("userEmail").getValue().toString();
-                                }
+            /*new Thread(new Runnable() {
+                @Override
+                public void run() {*/
 
-                                if( sellerMail.equals(productSellerEmail) )
-                                {
-                                    //if( seller.hasChild("shopProducts") )
-                                    {
-                                        DatabaseReference productRef = seller.child("products").getRef();
+            StorageReference itemStorageRef = storageReference.child(productSellerEmail + "/" + Uri.parse(productImageUri).getLastPathSegment() );
 
-                                        productRef.push().setValue(product);
+            UploadTask task = itemStorageRef.putFile(Uri.parse(productImageUri));
+                    try{
+                        //add image to firebase storage bucket
+                                Task<Uri> urlTask = task.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                    @Override
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        if( task.isSuccessful() )
+                                        {
+                                            //image successfully uploaded to firebase storage
+                                            toast("Successfully uploaded product image..");
+                                            return itemStorageRef.getDownloadUrl();
+                                        }
+                                        else
+                                        {
+                                            toast("Could not upload product image!");
+                                            return null;
+                                        }
                                     }
+                                });
 
-                                    return;
-                                }
-                            }
+                                urlTask.addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+
+                                        Uri downloadUri = task.getResult();
+
+                                        if( downloadUri == null )
+                                        {
+                                            toast("Could not add product!." +
+                                                    "\nPlease check your connection and try again.");
+                                        }
+                                        else
+                                        {
+                                            toast("adding product...");
+                                            Product product = new Product(new String(downloadUri.toString()), productName, productDescription
+                                                    , productCartegory, quantity, price);
+                                            addProductData(ref, productSellerEmail, product);
+                                            toast("Product added successfully");
+                                        }
+                                    }
+                                });
+                                toast("after uploading file");
+
+                    }catch( Exception e )
+                    {
+                        toast("Error: " + e);
+                    }
+                /*}
+            });.start();*/
+        }catch(Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addProductData(DatabaseReference ref, String productSellerEmail, Product product)
+    {
+        try {
+            //add product data to realtime database here.
+            ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    toast("adding product details to realtime database");
+                    String sellerMail = "";
+                    for( DataSnapshot seller : task.getResult().getChildren() )
+                    {
+                        if( seller.hasChild("userEmail") )
+                        {
+                            sellerMail = seller.child("userEmail").getValue().toString();
                         }
-                    });
-                }catch( Exception e )
-                {
-                    toast("Error: " + e);
+
+                        if( sellerMail.equals(productSellerEmail) )
+                        {
+                            //if( seller.hasChild("shopProducts") )
+                            {
+                                DatabaseReference productRef = seller.child("products").getRef();
+
+                                productRef.push().setValue(product);
+                            }
+
+                            return;
+                        }
+                    }
                 }
-            }
-        }).start();
+            });
+        }catch( Exception e )
+        {
+            toast("Error: " + e);
+        }
     }
 
     private void toast(String message)

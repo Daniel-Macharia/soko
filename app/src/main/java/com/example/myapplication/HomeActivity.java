@@ -66,6 +66,9 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("sellerEmail", items.get(i).getSellerEmail() );
                 intent.putExtra("sellerPhone", items.get(i).getSellerPhone() );
                 intent.putExtra("shopName", items.get(i).getShopName() );
+
+                intent.putExtra("productImageUri", items.get(i).getItemImageUri() );
+
                 startActivity(intent);
             }
         });
@@ -164,9 +167,14 @@ public class HomeActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                         for( DataSnapshot product : task.getResult().getChildren() )
                                         {
-                                            String itemName = "", itemDescription = "", sellerMail = "", sellerPhone = "", shopName = "";
+                                            String itemName = "", itemImageUri = "", itemDescription = "", sellerMail = "", sellerPhone = "", shopName = "";
                                             long itemPrice = 0;
                                             long itemQuantityInStock = 0;
+
+                                            if( product.hasChild("productImageUri") )
+                                            {
+                                                itemImageUri = product.child("productImageUri").getValue().toString();
+                                            }
 
                                             if( product.hasChild("productName") )
                                             {
@@ -200,7 +208,7 @@ public class HomeActivity extends AppCompatActivity {
                                                 shopName = seller.child("shopName").getValue().toString();
                                             }
 
-                                            items.add( new ListItem(0, itemName, itemDescription, 0, itemPrice, itemQuantityInStock, sellerMail, sellerPhone, shopName) );
+                                            items.add( new ListItem(itemImageUri, itemName, itemDescription, 0, itemPrice, itemQuantityInStock, sellerMail, sellerPhone, shopName) );
                                         }
                                         adapter.notifyDataSetChanged();
                                     }

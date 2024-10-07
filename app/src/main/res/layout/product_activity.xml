@@ -10,19 +10,19 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
         android:background="@drawable/rounded_rectangle"
         android:backgroundTint="@color/cream"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_margin="16dp"
         >
 
         <TextView
             android:id="@+id/shopName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="shop name here"
             android:textColor="@color/dark_green"
             android:textSize="32sp"
@@ -31,16 +31,19 @@
             />
 
         <ImageView
+            android:id="@+id/productImage"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:src="@drawable/food_item"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:src="@drawable/downloading"
 
             />
 
         <TextView
             android:id="@+id/productName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="product name here"
             android:textColor="@color/blue"
             android:textSize="24sp"
@@ -51,7 +54,8 @@
         <TextView
             android:id="@+id/productDescription"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:text="product description here"
             android:textColor="@color/blue"
             android:textSize="16sp"
@@ -63,7 +67,8 @@
         <TextView
             android:id="@+id/productPrice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="product price here"
             android:textColor="@color/blue"
             android:textSize="24sp"
@@ -75,7 +80,8 @@
         <LinearLayout
             android:id="@+id/phone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_margin="4dp"
@@ -107,7 +113,8 @@
         <LinearLayout
             android:id="@+id/mail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_margin="4dp"
