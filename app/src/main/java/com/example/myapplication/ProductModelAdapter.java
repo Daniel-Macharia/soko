@@ -57,8 +57,6 @@ public class ProductModelAdapter extends ArrayAdapter<ProductModel> {
             TextView productName = currentView.findViewById( R.id.product_name );
             TextView productPrice = currentView.findViewById( R.id.product_price );
 
-
-            //productImage.setImageBitmap(MediaStore.Images.Media.getBitmap( getAppContext().getContentResolver(), Uri.parse( currentItem.getProductImageUri() ) ));
             productImage.setImageResource(R.drawable.downloading);
             productName.setText( currentItem.getProductName() );
             productPrice.setText( "Ksh " + currentItem.getProductCost() + "/=" );
@@ -95,7 +93,6 @@ public class ProductModelAdapter extends ArrayAdapter<ProductModel> {
     private void setItemImage( ImageView image, String itemImageUri)
     {
         try{
-            toast("getting image from firebase");
             String path = Uri.parse(itemImageUri).getLastPathSegment();
 
             if( path == null )
@@ -115,7 +112,6 @@ public class ProductModelAdapter extends ArrayAdapter<ProductModel> {
 
                                 Bitmap bm = BitmapFactory.decodeByteArray( imageData, 0, imageData.length);
                                 image.setImageBitmap(bm);
-                                toast("image set..");
                             }catch( Exception e )
                             {
                                 toast("Error: " + e);
