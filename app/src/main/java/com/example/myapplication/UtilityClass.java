@@ -52,7 +52,7 @@ public class UtilityClass {
             return false;
         }
 
-        String shopNameRegex = "^[a-zA-Z0-9]{1,30}$";
+        String shopNameRegex = "^[a-zA-Z0-9 ]{1,30}$";
 
         if( !shopName.matches( shopNameRegex ) )
         {

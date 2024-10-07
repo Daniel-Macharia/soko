@@ -249,7 +249,7 @@ public class SignUp extends AppCompatActivity {
         if( shopName != null && !UtilityClass.isValidShopName(shopName) )
         {
             Toast.makeText(getApplicationContext(), "Invalid shop name!" +
-                    "\nA shop name may only contain characters and numbers " +
+                    "\nA shop name may only contain characters, numbers and spaces" +
                     "\nhaving a maximum of 30 characters.", Toast.LENGTH_SHORT).show();
             return false;
         }

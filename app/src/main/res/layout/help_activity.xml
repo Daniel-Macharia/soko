@@ -20,13 +20,91 @@
         android:gravity="center"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="32sp"
-            android:textColor="@color/blue"
-            android:text="Welcome to Help Center"
-            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_rectangle"
+            android:backgroundTint="@color/cream"
+            android:padding="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="32sp"
+                android:textColor="@color/dark_green"
+                android:text="Email the developers"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@drawable/rounded_rectangle"
+                android:backgroundTint="@color/grey"
+
+                >
+
+                <EditText
+                    android:id="@+id/emailSubject"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:textSize="20sp"
+                    android:inputType="textEmailSubject"
+                    android:hint="Enter email subject"
+                    android:textColorHint="@color/cream"
+                    android:gravity="start"
+                    android:padding="4dp"
+                    android:textColor="@color/blue"
+                    />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+
+                    >
+                    <Button
+                        android:id="@+id/sendEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/send"
+                        android:textColor="@color/blue"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/emailBody"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:textSize="20sp"
+                android:inputType="textMultiLine|textAutoCorrect"
+                android:hint="Enter email subject"
+                android:textColorHint="@color/cream"
+                android:gravity="top|start"
+                android:padding="4dp"
+                android:textColor="@color/blue"
+                android:background="@drawable/rounded_rectangle"
+                android:backgroundTint="@color/grey"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 

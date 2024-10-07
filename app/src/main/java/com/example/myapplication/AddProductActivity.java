@@ -264,15 +264,12 @@ public class AddProductActivity extends AppCompatActivity {
                                         }
                                         else
                                         {
-                                            toast("adding product...");
                                             Product product = new Product(new String(downloadUri.toString()), productName, productDescription
                                                     , productCartegory, quantity, price);
                                             addProductData(ref, productSellerEmail, product);
-                                            toast("Product added successfully");
                                         }
                                     }
                                 });
-                                toast("after uploading file");
 
                     }catch( Exception e )
                     {
@@ -293,7 +290,6 @@ public class AddProductActivity extends AppCompatActivity {
             ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    toast("adding product details to realtime database");
                     String sellerMail = "";
                     for( DataSnapshot seller : task.getResult().getChildren() )
                     {

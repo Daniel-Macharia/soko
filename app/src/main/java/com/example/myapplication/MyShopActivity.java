@@ -99,23 +99,6 @@ public class MyShopActivity extends AppCompatActivity {
 
     private void setGridItems()
     {
-        /*LocalDatabase db = new LocalDatabase(getApplicationContext());
-        db.open();
-        ArrayList<String[]> products = db.getAvailableProducts();
-        db.close();
-
-        for( String[] product: products )
-        {
-            myProducts.add( new ProductModel(
-               product[0],
-               product[1],
-               product[2],
-               product[3],
-               Integer.parseInt(product[4]),
-               Integer.parseInt(product[5])
-            ));
-        } */
-
         String userEmail = getIntent().getStringExtra("userEmail");
 
         FirebaseDatabase db = FirebaseDatabase.getInstance();
