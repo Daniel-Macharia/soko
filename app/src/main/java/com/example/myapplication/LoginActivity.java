@@ -137,9 +137,11 @@ public class LoginActivity extends AppCompatActivity {
                         DatabaseReference buyerRef = ref.getDatabase().getReference("seller");
                         verifyUser( buyerRef, new String(userEmail), new String(userPassword), false);
                     }
-
-                    Toast.makeText(getApplicationContext(), "No user with specified email exists!" +
-                            "\nPlease sign up", Toast.LENGTH_SHORT).show();
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "No user with specified email exists!" +
+                                "\nPlease sign up", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }catch(Exception e)
