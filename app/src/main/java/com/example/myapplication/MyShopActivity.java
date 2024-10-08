@@ -21,8 +21,10 @@ import androidx.core.app.ActivityCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -31,7 +33,7 @@ public class MyShopActivity extends AppCompatActivity {
     private ImageView menu, profile;
     private GridView listItems;
     private ArrayList<ProductModel> myProducts = new ArrayList<>();
-    public static ProductModelAdapter adapter;
+    public ProductModelAdapter adapter;
 
     private LinearLayout addProductLayout;
     private TextView screenTitle;
@@ -97,6 +99,20 @@ public class MyShopActivity extends AppCompatActivity {
         });
     }
 
+    private boolean contains(ArrayList<ProductModel> products, ProductModel product )
+    {
+        for( ProductModel model : products )
+        {
+            if( model.getProductImageUri().equals(product.getProductImageUri() )
+            && model.getProductName().equals( product.getProductName() )
+            && model.getProductCategory().equals( product.getProductCategory()) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     private void setGridItems()
     {
         String userEmail = getIntent().getStringExtra("userEmail");
@@ -104,11 +120,11 @@ public class MyShopActivity extends AppCompatActivity {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference ref = db.getReference("seller");
 
-        ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
+            public void onDataChange(@NonNull DataSnapshot sellerSnapshot) {
                 try {
-                    for( DataSnapshot seller : task.getResult().getChildren() )
+                    for( DataSnapshot seller : sellerSnapshot.getChildren() )
                     {
                         String sellerEmail = "";
 
@@ -117,66 +133,81 @@ public class MyShopActivity extends AppCompatActivity {
                             sellerEmail = seller.child("userEmail").getValue().toString();
                         }
 
-                        //add only products sold by other people
+                        //add only products sold by this user
                         if( userEmail.equals(sellerEmail) )
                         {
                             if( seller.hasChild("products") )
                             {
                                 DatabaseReference productsRef = seller.child("products").getRef();
 
-                                productsRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                productsRef.addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        for( DataSnapshot product : task.getResult().getChildren() )
+                                    public void onDataChange(@NonNull DataSnapshot productSnapshot) {
+                                        try {
+                                            for( DataSnapshot product : productSnapshot.getChildren() )
+                                            {
+                                                String itemName = "", itemImageUri = "", itemDescription = "", itemCartegory = "", sellerMail = "", sellerPhone = "", shopName = "";
+                                                long itemPrice = 0;
+                                                long itemQuantityInStock = 0;
+
+                                                if( product.hasChild("productName") )
+                                                {
+                                                    itemName = product.child("productName").getValue().toString();
+                                                }
+                                                if( product.hasChild("productImageUri") )
+                                                {
+                                                    itemImageUri = product.child("productImageUri").getValue().toString();
+                                                }
+                                                if( product.hasChild("productDescription") )
+                                                {
+                                                    itemDescription = product.child("productDescription").getValue().toString();
+                                                }
+                                                if( product.hasChild("productPrice") )
+                                                {
+                                                    itemPrice = (long) product.child("productPrice").getValue();
+                                                }
+                                                if( product.hasChild("productQuantity") )
+                                                {
+                                                    itemQuantityInStock = (long) product.child("productQuantity").getValue();
+                                                }
+                                                if( product.hasChild("productCartegory") )
+                                                {
+                                                    itemCartegory = product.child("productCartegory").getValue().toString();
+                                                }
+
+                                                if( seller.hasChild("userEmail") )
+                                                {
+                                                    sellerMail = seller.child("userEmail").getValue().toString();
+                                                }
+
+                                                if( seller.hasChild("userPhone") )
+                                                {
+                                                    sellerPhone = seller.child("userPhone").getValue().toString();
+                                                }
+
+                                                if( seller.hasChild("shopName") )
+                                                {
+                                                    shopName = seller.child("shopName").getValue().toString();
+                                                }
+
+                                                ProductModel p = new ProductModel(itemImageUri, itemName, itemDescription, itemCartegory, itemQuantityInStock, itemPrice);
+
+                                                if( !contains( myProducts, p ) )
+                                                {
+                                                    myProducts.add( p );
+                                                    adapter.notifyDataSetChanged();
+                                                }
+                                            }
+                                            adapter.notifyDataSetChanged();
+                                        }catch( Exception e )
                                         {
-                                            String itemName = "", itemImageUri = "", itemDescription = "", itemCartegory = "", sellerMail = "", sellerPhone = "", shopName = "";
-                                            long itemPrice = 0;
-                                            long itemQuantityInStock = 0;
-
-                                            if( product.hasChild("productName") )
-                                            {
-                                                itemName = product.child("productName").getValue().toString();
-                                            }
-                                            if( product.hasChild("productImageUri") )
-                                            {
-                                                itemImageUri = product.child("productImageUri").getValue().toString();
-                                            }
-                                            if( product.hasChild("productDescription") )
-                                            {
-                                                itemDescription = product.child("productDescription").getValue().toString();
-                                            }
-                                            if( product.hasChild("productPrice") )
-                                            {
-                                                itemPrice = (long) product.child("productPrice").getValue();
-                                            }
-                                            if( product.hasChild("productQuantity") )
-                                            {
-                                                itemQuantityInStock = (long) product.child("productQuantity").getValue();
-                                            }
-                                            if( product.hasChild("productCartegory") )
-                                            {
-                                                itemCartegory = product.child("productCartegory").getValue().toString();
-                                            }
-
-                                            if( seller.hasChild("userEmail") )
-                                            {
-                                                sellerMail = seller.child("userEmail").getValue().toString();
-                                            }
-
-                                            if( seller.hasChild("userPhone") )
-                                            {
-                                                sellerPhone = seller.child("userPhone").getValue().toString();
-                                            }
-
-                                            if( seller.hasChild("shopName") )
-                                            {
-                                                shopName = seller.child("shopName").getValue().toString();
-                                            }
-
-                                            myProducts.add( new ProductModel(itemImageUri, itemName, itemDescription, itemCartegory, itemQuantityInStock, itemPrice) );
-                                            //items.add( new ListItem(0, itemName, itemDescription, 0, itemPrice, itemQuantityInStock, sellerMail, sellerPhone, shopName) );
+                                            Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
                                         }
-                                        adapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
                                     }
                                 });
                             }
@@ -188,7 +219,13 @@ public class MyShopActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Error: " + e, Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
+
     }
 
     private void setMainMenu(Context context, View view)

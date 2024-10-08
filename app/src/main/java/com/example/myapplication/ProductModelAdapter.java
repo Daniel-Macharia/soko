@@ -129,4 +129,9 @@ public class ProductModelAdapter extends ArrayAdapter<ProductModel> {
     {
         Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
 }

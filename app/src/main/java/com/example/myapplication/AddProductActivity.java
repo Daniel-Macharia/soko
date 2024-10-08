@@ -163,16 +163,15 @@ public class AddProductActivity extends AppCompatActivity {
 
                     String productSellerEmail = getIntent().getStringExtra("userEmail");
                     //add product to cloud storage
-                    Toast.makeText(getApplicationContext(), "Adding product using email: " + productSellerEmail, Toast.LENGTH_SHORT).show();
                     addProductToSoko( new String(productSellerEmail), productPictureUri, name, desc, cart, numInStock, productPrice);
 
                     //update the grid view in the main screen
-                    MyShopActivity.adapter.addRefreshList( new ProductModel(productPictureUri,
+                    /*MyShopActivity.adapter.addRefreshList( new ProductModel(productPictureUri,
                             name,
                             desc,
                             cart,
                             numInStock,
-                            productPrice));
+                            productPrice));*/
 
                     clearInputFields();
                 }
